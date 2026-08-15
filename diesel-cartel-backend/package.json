@@ -1,0 +1,13 @@
+{
+  "name": "diesel-cartel-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node --env-file=.env src/server.js",
+    "dev": "node --env-file=.env --watch src/server.js",
+    "seed": "node --env-file=.env src/seed.js",
+    "migrate": "node --env-file=.env src/db.js --migrate"
+  }
+}
