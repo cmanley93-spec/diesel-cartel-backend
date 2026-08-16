@@ -235,7 +235,9 @@ export function seedFassProducts() {
   // titles in sync with the source data above on every boot, while still
   // leaving every other admin-editable field alone.
   const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'FASS'`);
-  for (const p of [...FASS_STANDARD_PRODUCTS, ...FASS_PLUS_NODROP_PRODUCTS]) updateName.run(p);
+  for (const p of [...FASS_STANDARD_PRODUCTS, ...FASS_PLUS_NODROP_PRODUCTS]) {
+    updateName.run({ id: p.id, name: p.name });
+  }
 }
 
 migrate();
