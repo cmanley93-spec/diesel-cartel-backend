@@ -13,7 +13,7 @@ import { isAdminRequest } from './lib/auth.js';
 import { listCategories, listPlatforms, listProducts, getProduct } from './routes/products.js';
 import { createCheckout, getOrderBySession } from './routes/checkout.js';
 import { stripeWebhook } from './routes/webhooks.js';
-import { adminListOrders, adminCreateProduct, adminUpdateProduct, adminDeleteProduct } from './routes/admin.js';
+import { adminListOrders, adminListProducts, adminCreateProduct, adminUpdateProduct, adminDeleteProduct, adminGetPurchaseOrder } from './routes/admin.js';
 
 const PORT = Number(process.env.PORT) || 4000;
 
@@ -51,9 +51,11 @@ const routes = [
   route('POST', '/api/webhooks/stripe', (req, res, params, rawBody) => stripeWebhook(req, res, rawBody), { raw: true }),
 
   route('GET', '/api/admin/orders', (req, res) => adminListOrders(req, res), { admin: true }),
+  route('GET', '/api/admin/products', (req, res) => adminListProducts(req, res), { admin: true }),
   route('POST', '/api/admin/products', (req, res, params, body) => adminCreateProduct(req, res, params, body), { admin: true }),
   route('PATCH', '/api/admin/products/:id', (req, res, params, body) => adminUpdateProduct(req, res, params, body), { admin: true }),
   route('DELETE', '/api/admin/products/:id', (req, res, params) => adminDeleteProduct(req, res, params), { admin: true }),
+  route('GET', '/api/admin/orders/:id/purchase-order', (req, res, params) => adminGetPurchaseOrder(req, res, params), { admin: true }),
 ];
 
 const server = http.createServer(async (req, res) => {
