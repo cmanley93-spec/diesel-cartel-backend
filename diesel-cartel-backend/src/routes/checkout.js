@@ -13,16 +13,63 @@ import { db } from '../db.js';
 import { sendJson, HttpError } from '../lib/http.js';
 import { createCheckoutSession } from '../lib/stripe.js';
 
-const SHIPPING_FLAT_CENTS = 2499;
 const FREE_SHIP_THRESHOLD_CENTS = 15000;
+const FREE_SHIP_MAX_WEIGHT_LBS = 10; // free-shipping perk only applies to lighter carts — see note below
 const TAX_RATE = 0.12; // flat demo rate — swap for a real tax service before going live in multiple provinces
+
+// Weight-tiered flat-rate shipping. This is an approximation, not a live
+// carrier quote (no Freightcom/Freightera account is connected yet) —
+// good enough to avoid under/over-charging by much while keeping checkout
+// simple. Revisit these dollar amounts once real shipping invoices come in.
+const SHIPPING_TIERS = [
+  { maxLbs: 2, cents: 1299 },
+  { maxLbs: 10, cents: 1999 },
+  { maxLbs: 30, cents: 3499 },
+  { maxLbs: 70, cents: 7999 },
+  { maxLbs: 150, cents: 14999 },
+];
+
+// Per-category fallback weight (lbs) for products that don't have a real
+// weight set yet in Admin -> Products. Rough real-world ballparks for
+// diesel performance parts — replace with actual weights as they're entered.
+const CATEGORY_DEFAULT_WEIGHT_LBS = {
+  tuning: 2,
+  exhaust: 25,
+  turbochargers: 45,
+  suspension: 60,
+  wheels: 80,
+  intake: 8,
+  fuel: 5,
+  apparel: 1,
+};
+const FALLBACK_WEIGHT_LBS = 5; // used if a product has no category match either
+
+function effectiveWeightLbs(product) {
+  if (product.weight_lbs != null) return product.weight_lbs;
+  return CATEGORY_DEFAULT_WEIGHT_LBS[product.category_slug] ?? FALLBACK_WEIGHT_LBS;
+}
+
+function shippingCentsForWeight(totalWeightLbs, subtotalCents) {
+  if (totalWeightLbs === 0) return 0;
+  if (totalWeightLbs > 150) {
+    throw new HttpError(
+      422,
+      'This order is too heavy for automatic shipping calculation (over 150 lbs). ' +
+      'Contact us directly for a freight quote before ordering.'
+    );
+  }
+  if (totalWeightLbs <= FREE_SHIP_MAX_WEIGHT_LBS && subtotalCents >= FREE_SHIP_THRESHOLD_CENTS) return 0;
+  const tier = SHIPPING_TIERS.find((t) => totalWeightLbs <= t.maxLbs);
+  return tier.cents;
+}
 
 function computeTotals(lineItems) {
   const subtotalCents = lineItems.reduce((sum, li) => sum + li.priceCents * li.qty, 0);
-  const shippingCents = subtotalCents >= FREE_SHIP_THRESHOLD_CENTS || subtotalCents === 0 ? 0 : SHIPPING_FLAT_CENTS;
+  const totalWeightLbs = lineItems.reduce((sum, li) => sum + li.weightLbs * li.qty, 0);
+  const shippingCents = subtotalCents === 0 ? 0 : shippingCentsForWeight(totalWeightLbs, subtotalCents);
   const taxCents = Math.round(subtotalCents * TAX_RATE);
   const totalCents = subtotalCents + shippingCents + taxCents;
-  return { subtotalCents, shippingCents, taxCents, totalCents };
+  return { subtotalCents, shippingCents, taxCents, totalCents, totalWeightLbs };
 }
 
 export async function createCheckout(req, res, params, body) {
@@ -46,6 +93,7 @@ export async function createCheckout(req, res, params, body) {
       productId: product.id,
       name: product.name,
       priceCents: product.price_cents,
+      weightLbs: effectiveWeightLbs(product),
       qty,
     });
   }
