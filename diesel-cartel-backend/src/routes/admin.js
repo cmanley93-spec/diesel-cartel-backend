@@ -40,6 +40,8 @@ export function adminListProducts(req, res) {
     stockQty: r.stock_qty,
     active: !!r.active,
     supplier: r.supplier || '',
+    weightLbs: r.weight_lbs,
+    categorySlug: r.category_slug,
   })));
 }
 
@@ -76,7 +78,7 @@ const UPDATABLE_FIELDS = {
   name: 'name', brand: 'brand', categorySlug: 'category_slug', platformSlug: 'platform_slug',
   priceCents: 'price_cents', compareAtCents: 'compare_at_cents', badge: 'badge', icon: 'icon',
   rating: 'rating', reviews: 'reviews', description: 'description', imageUrl: 'image_url',
-  active: 'active', stockQty: 'stock_qty', supplier: 'supplier',
+  active: 'active', stockQty: 'stock_qty', supplier: 'supplier', weightLbs: 'weight_lbs',
 };
 
 export function adminUpdateProduct(req, res, params, body) {
