@@ -96,6 +96,16 @@ CREATE TABLE IF NOT EXISTS admin_users (
 
 export function migrate() {
   db.exec(SCHEMA);
+  // Added after initial launch: which real-world supplier/distributor a
+  // product should be purchased from (Dix Performance, APG Wholesale,
+  // Meyers, Suntop Hi-Tech, etc). Nullable — unset until you assign one.
+  // SQLite has no "ADD COLUMN IF NOT EXISTS", so this is wrapped to be
+  // safe to run on every boot.
+  try {
+    db.exec('ALTER TABLE products ADD COLUMN supplier TEXT');
+  } catch (err) {
+    if (!/duplicate column/i.test(err.message)) throw err;
+  }
 }
 
 migrate();
