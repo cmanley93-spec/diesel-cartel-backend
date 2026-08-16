@@ -245,12 +245,27 @@ export function seedDccTurbos() {
     VALUES
       (@id, @sku, @name, 'DCC', 'turbochargers', 'universal', @priceCents, @description, @weightLbs, NULL, 1, 3)
   `);
-  for (const p of DCC_TURBO_PRODUCTS) insert.run(p);
+  let inserted = 0;
+  for (const p of DCC_TURBO_PRODUCTS) {
+    try {
+      const info = insert.run(p);
+      if (info.changes > 0) inserted++;
+    } catch (err) {
+      console.error('[seedDccTurbos] insert failed for', p.id, '-', err.message);
+    }
+  }
 
   const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'DCC'`);
   for (const p of DCC_TURBO_PRODUCTS) {
-    updateName.run({ id: p.id, name: p.name });
+    try {
+      updateName.run({ id: p.id, name: p.name });
+    } catch (err) {
+      console.error('[seedDccTurbos] update failed for', p.id, '-', err.message);
+    }
   }
+
+  const dccCount = db.prepare(`SELECT COUNT(*) AS c FROM products WHERE brand = 'DCC'`).get().c;
+  console.log(`[seedDccTurbos] inserted ${inserted}/${DCC_TURBO_PRODUCTS.length} new rows this run; ${dccCount} DCC rows total in DB now.`);
 }
 
 export function seedFassProducts() {
