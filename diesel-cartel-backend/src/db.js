@@ -207,6 +207,52 @@ const FASS_PLUS_NODROP_PRODUCTS = [
   { id: 'fass-ndtspf20290f240g', sku: 'NDTSPF20290F240G', name: 'FASS No-Drop Plus 240GPH Lift Pump — 2023-2024 Ford F-250/F-350/F-450 6.7L Power Stroke', platformSlug: 'powerstroke', priceCents: 164306, description: 'FASS No-Drop Plus lift pump kit, 240 GPH. Fits 2023-2024 Ford F-250/F-350/F-450 6.7L Power Stroke. Frame-mounted install — no need to drop the fuel tank or touch the factory in-tank pump. Integrated 2-micron fuel filter and water separator, Whisper Technology, Mass Flow Return, Limited Lifetime Warranty. MAP pricing.' },
 ];
 
+// ============================================================
+// DCC (Diesel Cartel Canada) house-brand turbochargers — universal
+// frame-size units (not tied to one truck/year the way the FASS
+// pumps are), sized for custom big-single or compound builds across
+// Cummins/Duramax/Power Stroke. Priced from CAD-converted USD specs
+// (today's rate + a 5% buffer for rate drift/card fees), regular
+// (non-sale) pricing basis. Listed under brand "DCC" only — no
+// third-party brand name attached, per house-brand naming.
+// Same INSERT OR IGNORE safety as the FASS batches: only adds
+// missing rows, never overwrites a price/stock/active edit made in
+// Admin -> Products on a later deploy.
+// ============================================================
+const DCC_TURBO_PRODUCTS = [
+  { id: 'dcc-turbo-7265', sku: 'DCCT7265', name: 'DCC Billet Turbocharger — 72/65mm Compressor/Turbine Wheel', priceCents: 58130, weightLbs: 14, description: 'DCC billet turbocharger, 72/65mm compressor and turbine wheel combination. Billet compressor wheel for improved airflow and durability over cast alternatives. Sized for mild-to-moderate power builds. This is a universal-fit frame-size turbo installed as part of a custom turbo system — not a direct bolt-on replacement — so pair it with the appropriate manifold, oil/coolant lines, and downpipe for your specific Cummins, Duramax, or Power Stroke build.' },
+  { id: 'dcc-turbo-75-8375', sku: 'DCCT7583', name: 'DCC Billet Turbocharger — 75mm, 83×75mm Wheel, 1.10 AR T4 Divided', priceCents: 72699, weightLbs: 17, description: 'DCC billet turbocharger, 75mm compressor with an 83×75mm turbine wheel. T4 divided turbine housing, 1.10 A/R. Divided housing helps maintain exhaust pulse separation for better spool on divided-manifold setups. Universal frame-size unit for custom single or compound turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-7875', sku: 'DCCT7875NG', name: 'DCC Billet Turbocharger — Next Gen 78/75mm', priceCents: 109121, weightLbs: 19, description: 'DCC Next Gen billet turbocharger, 78mm compressor / 75mm turbine — one of the most common mid-size frames used in diesel truck big-single and compound builds. Billet compressor wheel construction. Universal frame-size unit for custom turbo systems; pair with the correct manifold, housing, and plumbing for your platform.' },
+  { id: 'dcc-turbo-80-8375', sku: 'DCCT8083', name: 'DCC Billet Turbocharger — 80mm, 83×75mm Wheel, 1.10 AR T4 Divided', priceCents: 87267, weightLbs: 21, description: 'DCC billet turbocharger, 80mm compressor with an 83×75mm turbine wheel. T4 divided turbine housing, 1.10 A/R. A step up in flow from the 75mm frame for bigger power targets while keeping a divided housing for pulse-separated manifolds. Universal frame-size unit — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-88-9688', sku: 'DCCT8896DV', name: 'DCC Billet Turbocharger — 88mm, 96×88mm Wheel, Dual V-Band, 1.30 AR', priceCents: 164482, weightLbs: 27, description: 'DCC billet turbocharger, 88mm compressor with a 96×88mm turbine wheel. Dual V-band housings (compressor and turbine) for easier install/removal in a custom system, 1.30 A/R turbine housing. Large-frame unit suited to big-single setups or as the atmosphere (top) stage of a compound system. Universal frame-size unit — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-88-103', sku: 'DCCT88103NG', name: 'DCC Billet Turbocharger — Next Gen 88/103mm, 1.58 AR', priceCents: 203818, weightLbs: 31, description: 'DCC Next Gen billet turbocharger, 88/103mm compressor wheel, 1.58 A/R turbine housing. Extra-large frame sized for serious big-single or compound builds chasing higher airflow. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-88-gt50', sku: 'DCCT88GT50', name: 'DCC Ball Bearing Turbocharger — 88mm/GT50, T6 Housing, 1.24 AR', priceCents: 291231, weightLbs: 29, description: 'DCC ball bearing turbocharger, 88mm/GT50-class compressor wheel, T6 turbine housing, 1.24 A/R. Ball bearing center cartridge for quicker spool response versus a journal-bearing unit of the same size. Extra-large frame for big-single or compound race/tow builds. Universal frame-size unit — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-94-113', sku: 'DCCT94113', name: 'DCC Billet Turbocharger — 94/113mm, T6 Housing, 1.24 AR', priceCents: 334938, weightLbs: 36, description: 'DCC billet turbocharger, 94/113mm compressor wheel, T6 turbine housing, 1.24 A/R. The largest frame in the DCC turbo lineup — built for serious compound/big-single race and heavy-tow applications chasing maximum airflow. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+];
+
+export function seedDccTurbos() {
+  // Same timing guard as the FASS seed below: this runs at db.js
+  // import time, which can be before seed.js has inserted its own
+  // (more complete) 'turbochargers' category row.
+  db.prepare(`
+    INSERT OR IGNORE INTO categories (slug, name, blurb, icon)
+    VALUES ('turbochargers', 'Turbochargers', 'Turbos, manifolds, and boost components', 'turbo')
+  `).run();
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO products
+      (id, sku, name, brand, category_slug, platform_slug, price_cents, description, weight_lbs, supplier, active, stock_qty)
+    VALUES
+      (@id, @sku, @name, 'DCC', 'turbochargers', 'universal', @priceCents, @description, @weightLbs, NULL, 1, 3)
+  `);
+  for (const p of DCC_TURBO_PRODUCTS) insert.run(p);
+
+  const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'DCC'`);
+  for (const p of DCC_TURBO_PRODUCTS) {
+    updateName.run({ id: p.id, name: p.name });
+  }
+}
+
 export function seedFassProducts() {
   // Guard: this can run before the placeholder seed script has inserted
   // the 'fuel' category row (categories are seeded separately, and this
@@ -242,6 +288,7 @@ export function seedFassProducts() {
 
 migrate();
 seedFassProducts();
+seedDccTurbos();
 
 if (process.argv.includes('--migrate')) {
   console.log('Migration applied to', DB_PATH);
