@@ -155,6 +155,16 @@ const FASS_STANDARD_PRODUCTS = [
 ];
 
 export function seedFassProducts() {
+  // Guard: this can run before the placeholder seed script has inserted
+  // the 'fuel' category row (categories are seeded separately, and this
+  // runs automatically whenever db.js loads). INSERT OR IGNORE here just
+  // guarantees the foreign key target exists — if the seed script's own
+  // (more complete) category row already exists, this is a no-op.
+  db.prepare(`
+    INSERT OR IGNORE INTO categories (slug, name, blurb, icon)
+    VALUES ('fuel', 'Fuel Systems', 'Lift pumps, injectors, and fuel delivery upgrades', 'fuel')
+  `).run();
+
   const insert = db.prepare(`
     INSERT OR IGNORE INTO products
       (id, sku, name, brand, category_slug, platform_slug, price_cents, description, weight_lbs, supplier, active, stock_qty)
