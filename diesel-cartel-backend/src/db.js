@@ -481,6 +481,188 @@ export function seedP1rp() {
   console.log(`[seedP1rp] inserted ${inserted}/${P1RP_EXHAUST_PRODUCTS.length} new rows this run; ${p1rpCount} P1RP rows total in DB now.`);
 }
 
+// ------------------------------------------------------------------
+// P1RP product photos. Sourced directly from each product's own
+// individual page on p1rp.com (their collection/category grid pages
+// proved unreliable — many tiles there serve stale, shared lazy-load
+// placeholder images reused across totally unrelated products, so
+// only a product's own page can be trusted). Every URL below was
+// confirmed on that exact product's page. SKUs NOT in this map are
+// intentionally left without a photo — either p1rp.com had no
+// distinct/reliable image for that item, or it couldn't be confirmed
+// — rather than risk showing the wrong picture; the storefront falls
+// back to a category icon for those. This only ever fills in an
+// empty image_url (see seedP1rpImages below), so it never overwrites
+// a photo set later by hand in Admin -> Products.
+// ------------------------------------------------------------------
+const P1RP_IMAGE_MAP = {
+  // Cummins
+  S6126PLM: 'https://p1rp.com/cdn/shop/files/S6126PLM.jpg?v=1749660289',
+  S6126SLM: 'https://p1rp.com/cdn/shop/files/S6126SLM.jpg?v=1749660288',
+  S6126P: 'https://p1rp.com/cdn/shop/files/S6126P.jpg?v=1749660290',
+  S61160PLM: 'https://p1rp.com/cdn/shop/files/S6126PLM_c208d0ad-d06f-4693-9edc-91d8a68febeb.jpg?v=1749660291',
+  S61160SLM: 'https://p1rp.com/cdn/shop/files/S6126SLM_f8dd945f-c494-4656-8073-c4b69dfa33b5.jpg?v=1749660291',
+  S61160P: 'https://p1rp.com/cdn/shop/files/S61160P.jpg?v=1749660292',
+  C6126P: 'https://p1rp.com/cdn/shop/files/C6126P.jpg?v=1749660361',
+  C6116PLM: 'https://p1rp.com/cdn/shop/files/C6116PLM.jpg?v=1749660362',
+  C6126PLM: 'https://p1rp.com/cdn/shop/files/C6126PLM.jpg?v=1749660360',
+  CDAL439: 'https://p1rp.com/cdn/shop/files/CDAL439_1.jpg?v=1749660328',
+  CDS9439: 'https://p1rp.com/cdn/shop/files/CDS9439.jpg?v=1749660321',
+  CDAL437: 'https://p1rp.com/cdn/shop/files/CDAL437.jpg?v=1749660329',
+  CDAL443: 'https://p1rp.com/cdn/shop/files/CDAL443.jpg?v=1749660325',
+  C6142P: 'https://p1rp.com/cdn/shop/files/C6142P.jpg?v=1749660359',
+  C6146PLM: 'https://p1rp.com/cdn/shop/files/C6146PLM.jpg?v=1749660355',
+  C6146P: 'https://p1rp.com/cdn/shop/files/C6146P.webp?v=1749660356',
+  CDAL441: 'https://p1rp.com/cdn/shop/files/CDAL441.jpg?v=1749660327',
+  CDAL442: 'https://p1rp.com/cdn/shop/files/CDAL442.jpg?v=1749660326',
+  CDS9442: 'https://p1rp.com/cdn/shop/files/CDS9442.jpg?v=1749660319',
+  C6145P: 'https://p1rp.com/cdn/shop/files/363-C6145P.webp?v=1749660358',
+  C6145PLM: 'https://p1rp.com/cdn/shop/files/C6145PLM.jpg?v=1749660357',
+  C6145SLM: 'https://p1rp.com/cdn/shop/files/C6145PLM_105c68c3-36e2-4a0e-8893-a88c1d6b4ff8.jpg?v=1749660356',
+  C6147PLM: 'https://p1rp.com/cdn/shop/files/c6147plm.jpg?v=1749660353',
+  C6147SLM: 'https://p1rp.com/cdn/shop/files/C6147SLM.jpg?v=1749660352',
+  C6147P: 'https://p1rp.com/cdn/shop/files/C6147P.webp?v=1749660354',
+  CDAL444: 'https://p1rp.com/cdn/shop/files/CDAL444.png?v=1749660324',
+  C6149P: 'https://p1rp.com/cdn/shop/files/C6149P.webp?v=1749660351',
+  CDAL447: 'https://p1rp.com/cdn/shop/files/CDAL447.webp?v=1749660323',
+  CDS9447: 'https://p1rp.com/cdn/shop/files/CDAL447_bd093450-dd91-4c48-a93e-22a7fceda239.webp?v=1749660316',
+  CDAL448: 'https://p1rp.com/cdn/shop/files/CDAL448.jpg?v=1749660322',
+  CDS9448: 'https://p1rp.com/cdn/shop/files/CDAL448_bf09b32f-1850-477b-bc11-61de38ca946e.jpg?v=1749660315',
+  C6149PLM: 'https://p1rp.com/cdn/shop/files/C6149PLM.webp?v=1749660350',
+  C6149SLM: 'https://p1rp.com/cdn/shop/files/C6149PLM_b8c5549f-24bd-4561-a40d-b02ff394f885.webp?v=1749660349',
+  C6151P: 'https://p1rp.com/cdn/shop/files/C6151P.webp?v=1749660348',
+  C6151PLM: 'https://p1rp.com/cdn/shop/files/C6151PLM_830fda28-aff9-46dc-81c1-572fc9e588ee.webp?v=1749660347',
+  C6151SLM: 'https://p1rp.com/cdn/shop/files/C6151PLM.webp?v=1749660347',
+
+  // Duramax
+  C6004PLM: 'https://p1rp.com/cdn/shop/files/C6004PLM_168d50d4-7f7f-4d9b-b058-b4693c2e0967.jpg?v=1749660377',
+  C6004P: 'https://p1rp.com/cdn/shop/files/C6004P_94f21da7-0e45-49cb-ab48-096a2d8fb1cb.jpg?v=1749660378',
+  C6020PLM: 'https://p1rp.com/cdn/shop/files/C6020PLM.jpg?v=1749660376',
+  C6044PLM: 'https://p1rp.com/cdn/shop/files/C6044PLM.jpg?v=1749660374',
+  C6044P: 'https://p1rp.com/cdn/shop/files/C6044P.jpg?v=1749660375',
+  CGMAL426: 'https://p1rp.com/cdn/shop/files/CGMAL426.jpg?v=1749660302',
+  CGMAL432: 'https://p1rp.com/cdn/shop/files/CGMAL432.jpg?v=1749660299',
+  C6048PLM: 'https://p1rp.com/cdn/shop/files/C6048PLM.jpg?v=1749660370',
+  C6048SLM: 'https://p1rp.com/cdn/shop/files/C6048SLM.jpg?v=1749660369',
+  C6045PLM: 'https://p1rp.com/cdn/shop/files/C6045PLM.jpg?v=1749660372',
+  C6045P: 'https://p1rp.com/cdn/shop/files/C6045P.jpg?v=1749660373',
+  CGMAL429: 'https://p1rp.com/cdn/shop/files/CGMAL429.jpg?v=1749660301',
+  CGMAL431: 'https://p1rp.com/cdn/shop/files/CGMAL431.jpg?v=1749660300',
+  C6049PLM: 'https://p1rp.com/cdn/shop/files/C6049PLM.jpg?v=1749660367',
+  C6049P: 'https://p1rp.com/cdn/shop/files/C6049P.jpg?v=1749660368',
+  C6057P: 'https://p1rp.com/cdn/shop/files/C6057P.jpg?v=1749660363',
+  CGMAL430: 'https://p1rp.com/cdn/shop/files/CGMAL430Render.png?v=1749660301',
+  C6056P: 'https://p1rp.com/cdn/shop/files/C6056P.png?v=1749660366',
+  CGMAL433: 'https://p1rp.com/cdn/shop/files/CGMAL433.jpg?v=1749660298',
+
+  // Powerstroke
+  C6254PLM: 'https://p1rp.com/cdn/shop/files/C6254PLM.jpg?v=1749660345',
+  C6254SLM: 'https://p1rp.com/cdn/shop/files/C6254PLM_6a879d47-962c-408c-86aa-c1118f9b7092.jpg?v=1749660344',
+  C6270P: 'https://p1rp.com/cdn/shop/files/C6270P.jpg?v=1749660337',
+  CFAL457: 'https://p1rp.com/cdn/shop/files/CFAL457.jpg?v=1749660313',
+  CFS9457: 'https://p1rp.com/cdn/shop/files/CFAL457_db06f687-23e5-4811-85ba-21d3b152e546.jpg?v=1749660305',
+  CFAL464: 'https://p1rp.com/cdn/shop/files/CFAL464.jpg?v=1749660307',
+  C6268PLM: 'https://p1rp.com/cdn/shop/files/C6268PLM.jpg?v=1749660339',
+  C6268SLM: 'https://p1rp.com/cdn/shop/files/C6268PLM_e8e02772-d5ed-4b8e-8812-83df9a7ab259.jpg?v=1749660338',
+  C6268P: 'https://p1rp.com/cdn/shop/files/C6268P.jpg?v=1749660340',
+  C6241PLM: 'https://p1rp.com/cdn/shop/files/C6241PLM.jpg?v=1749660346',
+  C6260PLM: 'https://p1rp.com/cdn/shop/files/C6260PLM.jpg?v=1749660343',
+  C6260SLM: 'https://p1rp.com/cdn/shop/files/C6260SLM.jpg?v=1749660342',
+  C6262P: 'https://p1rp.com/cdn/shop/files/C6262P.jpg?v=1749660341',
+  CFAL458: 'https://p1rp.com/cdn/shop/files/CFAL458.jpg?v=1749660312',
+  CFS9458: 'https://p1rp.com/cdn/shop/files/CFS9458.jpg?v=1749660304',
+  CFAL462: 'https://p1rp.com/cdn/shop/files/CFAL462.jpg?v=1749660309',
+  C6280PLM: 'https://p1rp.com/cdn/shop/files/C6280PLM.jpg?v=1749660336',
+  C6280SLM: 'https://p1rp.com/cdn/shop/files/C6280SLM.jpg?v=1749660335',
+  C6292SLM: 'https://p1rp.com/cdn/shop/files/C6292304.jpg?v=1749660332',
+  C6292P: 'https://p1rp.com/cdn/shop/files/C6292P.webp?v=1749660334',
+  C6292PLM: 'https://p1rp.com/cdn/shop/files/C6292PLM.webp?v=1749660333',
+  CFAL461: 'https://p1rp.com/cdn/shop/files/CFAL461.jpg?v=1749660311',
+  CFS9461: 'https://p1rp.com/cdn/shop/files/CFAL461_6b4a8a44-319a-45af-82f2-4bb1711a9a17.jpg?v=1749660303',
+  CFAL463: 'https://p1rp.com/cdn/shop/files/CFAL463.jpg?v=1749660308',
+  C6294PLM: 'https://p1rp.com/cdn/shop/files/C6294PLM.jpg?v=1749660330',
+  C6294P: 'https://p1rp.com/cdn/shop/files/C6294P.jpg?v=1749660331',
+  CFAL465: 'https://p1rp.com/cdn/shop/files/CFAL465.jpg?v=1749660306',
+  C6293SLM: 'https://p1rp.com/cdn/shop/files/P1SX004Assembled_88dda462-ac4d-4afb-9cc5-976d68bba20f.png?v=1776716405',
+  C6293PLM: 'https://p1rp.com/cdn/shop/files/P1SX004Assembled.png?v=1776716023',
+  C6281SLM: 'https://p1rp.com/cdn/shop/files/Unknown-2.png?v=1783373310',
+  C6281PLM: 'https://p1rp.com/cdn/shop/files/Unknown-2.png?v=1783373310',
+  C6281P: 'https://p1rp.com/cdn/shop/files/Unknown-3.png?v=1783373626',
+  CFAL466: 'https://p1rp.com/cdn/shop/files/Unknown-1.png?v=1776715105',
+  CFALD20: 'https://p1rp.com/cdn/shop/files/CFALD20.png?v=1776715666',
+
+  // Universal (Sprinter, EcoDiesel, Titan XD, Jeep Gladiator)
+  C6301SLM: 'https://p1rp.com/cdn/shop/files/C6301.png?v=1776716914',
+  C6301PLM: 'https://p1rp.com/cdn/shop/files/C6301.png?v=1776716914',
+  CDAL446: 'https://p1rp.com/cdn/shop/files/CDAL446.png?v=1749660324',
+  CDS9446: 'https://p1rp.com/cdn/shop/files/CDAL446_5a0af5de-fcd3-4cc3-939d-d54e17019abf.png?v=1749660318',
+  CNAL401: 'https://p1rp.com/cdn/shop/files/CNAL401.jpg?v=1749660293',
+  CJAL401: 'https://p1rp.com/cdn/shop/files/JeepGladiatorPic2.jpg?v=1749660295',
+  CJS9401: 'https://p1rp.com/cdn/shop/files/JeepGladiatorPic2_a7f2d1c6-bee4-4a6e-b9ca-efcdb9fb1ec5.jpg?v=1749660294',
+
+  // Exhaust tips (Armor Pro / Armor BLK)
+  T5049: 'https://p1rp.com/cdn/shop/files/file_dc90f7fb-c8a3-4e87-975c-7666a17b5fa4.png?v=1784039260',
+  T5050: 'https://p1rp.com/cdn/shop/files/file_c2ea426b-8c14-4760-b620-42f90e1b12c5.png?v=1784039263',
+  T5051: 'https://p1rp.com/cdn/shop/files/file_06c83f09-e258-4af0-89c0-9d864c66f24c.png?v=1784039211',
+  T5051BLK: 'https://p1rp.com/cdn/shop/files/file_24376ef3-af2b-4c5b-a5c5-c1393f007f69.png?v=1784039213',
+  T5052: 'https://p1rp.com/cdn/shop/files/file_85c2191b-404a-4589-a00e-7dc5ee7da558.png?v=1784039239',
+  T5053: 'https://p1rp.com/cdn/shop/files/file_f082f712-0a2e-4ad9-a59c-43da8f55b941.png?v=1784039221',
+  T5053BLK: 'https://p1rp.com/cdn/shop/files/file_1d807956-4dce-4c05-9f9d-027aa9ccd6cb.png?v=1784039222',
+  T5072: 'https://p1rp.com/cdn/shop/files/file_5957aad2-9566-4556-9731-a103bce3f84a.png?v=1784039234',
+  T5072BLK: 'https://p1rp.com/cdn/shop/files/file_8ebbdaca-43a3-4a61-a53f-8f21de8f72db.png?v=1784039238',
+  T5072CF: 'https://p1rp.com/cdn/shop/files/file_77e9076a-6ae4-441c-84ec-5a96307bd3e7.png?v=1784039281',
+  T5073: 'https://p1rp.com/cdn/shop/files/file_68d60d87-cc17-4c5f-831b-d6e830be40c4.png?v=1784039218',
+  T5074: 'https://p1rp.com/cdn/shop/files/file.png?v=1784039209',
+  T5074BLK: 'https://p1rp.com/cdn/shop/files/file_0edd61d7-39bb-48ca-af33-a1fc62b36dde.png?v=1784039224',
+  T5075: 'https://p1rp.com/cdn/shop/files/file_d0d5e49e-2ac1-425d-b584-7fd169a16481.png?v=1784039219',
+  T5075BLK: 'https://p1rp.com/cdn/shop/files/file_bc5b027d-0d86-4f5d-91a0-61848d7a9f44.png?v=1784039227',
+  T5075CF: 'https://p1rp.com/cdn/shop/files/file_f777ff65-eef1-4814-a602-b565aaf25c68.png?v=1784039282',
+  T5081: 'https://p1rp.com/cdn/shop/files/file_25587faf-bfa9-403d-b918-a935524d4d32.png?v=1784039243',
+  T5085: 'https://p1rp.com/cdn/shop/files/file_7aa039c1-707e-4a03-bebb-bda24aabeb8e.png?v=1784039236',
+  T5086: 'https://p1rp.com/cdn/shop/files/file_ef5dc7a3-8a6f-4f8a-ade3-a58e553d8acd.png?v=1784039264',
+  T5110: 'https://p1rp.com/cdn/shop/files/file_415b9bc1-d5e5-44cf-8747-986bc84ef4ea.png?v=1784039272',
+  T5111BLK: 'https://p1rp.com/cdn/shop/files/file_f1128a61-5199-406d-a662-318d750a2d7c.png?v=1784039230',
+  T5124: 'https://p1rp.com/cdn/shop/files/file_5c650610-0224-464a-b14c-654ec22777b1.png?v=1784039241',
+  T5124BLK: 'https://p1rp.com/cdn/shop/files/file_5ff9b889-4c43-42fe-aa47-ca9b3512d00c.png?v=1784039255',
+  T5125: 'https://p1rp.com/cdn/shop/files/file_1d3f1495-5ba0-4268-9858-235f0a93181a.png',
+  T5125BLK: 'https://p1rp.com/cdn/shop/files/file_63338eae-8457-45f7-9b07-3f223e5bf792.png?v=1784039251',
+  T5126: 'https://p1rp.com/cdn/shop/files/file_fd002dc0-d1db-4789-a584-41bfd7705b0d.png?v=1784039245',
+  T5126BLK: 'https://p1rp.com/cdn/shop/files/file_44ba1bb5-4107-4ec2-b860-bdf2bfac3f49.png?v=1784039275',
+  T5127: 'https://p1rp.com/cdn/shop/files/file_d9ae8fda-04e1-4242-9a6b-3f70630073dd.png?v=1784039232',
+  T5127BLK: 'https://p1rp.com/cdn/shop/files/file_2f3a54a4-1893-487d-afe0-ff55aedef919.png?v=1784039249',
+  T5128: 'https://p1rp.com/cdn/shop/files/file_c35997b4-044c-41b3-81ff-bbe366c98683.png?v=1784039252',
+  T5128BLK: 'https://p1rp.com/cdn/shop/files/file_bcd96a0b-7f97-460e-b8b5-a272811018cb.png?v=1784039279',
+  T5129: 'https://p1rp.com/cdn/shop/files/file_a7bf2810-e927-4de6-90f2-766ba084b000.png?v=1784039229',
+  T5129BLK: 'https://p1rp.com/cdn/shop/files/file_d70e9480-7fe1-4e15-885f-bc376048d5cd.png?v=1784039270',
+  T5130: 'https://p1rp.com/cdn/shop/files/file_a09e5a77-da7f-4ec3-8f17-08141265c78d.png?v=1784039253',
+  T5130BLK: 'https://p1rp.com/cdn/shop/files/file_9c9ce840-5da3-4293-bfe5-9acc003112b6.png?v=1784039258',
+  T5154: 'https://p1rp.com/cdn/shop/files/file_1f7d2478-508f-441e-999b-a0f1a4b50351.png?v=1784039215',
+  T5154BLK: 'https://p1rp.com/cdn/shop/files/file_c53a3826-eeca-44c9-9a61-fa2ed52b8e61.png?v=1784039225',
+  T5164BLK: 'https://p1rp.com/cdn/shop/files/file_50254ea1-8dc8-4308-b1fa-97efd72cc46a.png?v=1784039274',
+  T5165BLK: 'https://p1rp.com/cdn/shop/files/file_5c328533-0560-4ebf-ba43-3d2299b02ec5.png?v=1784039261',
+  T5166BLK: 'https://p1rp.com/cdn/shop/files/file_f6307fba-b66d-407e-b676-1a7b72cea1de.png?v=1784039277',
+  T5167BLK: 'https://p1rp.com/cdn/shop/files/file_3145b18e-912e-46ee-8a52-d01145fd7d56.png?v=1784039266',
+  T5169BLK: 'https://p1rp.com/cdn/shop/files/file_21c7e126-63c0-4440-b0be-66b11c52fd76.png?v=1784039268',
+};
+
+export function seedP1rpImages() {
+  const update = db.prepare(`
+    UPDATE products SET image_url = @image_url
+    WHERE sku = @sku AND brand = 'P1RP' AND (image_url IS NULL OR image_url = '')
+  `);
+  let updated = 0;
+  for (const [sku, image_url] of Object.entries(P1RP_IMAGE_MAP)) {
+    try {
+      const info = update.run({ sku, image_url });
+      if (info.changes > 0) updated++;
+    } catch (err) {
+      console.error('[seedP1rpImages] update failed for', sku, '-', err.message);
+    }
+  }
+  const total = Object.keys(P1RP_IMAGE_MAP).length;
+  console.log(`[seedP1rpImages] set image_url on ${updated}/${total} P1RP rows this run (${P1RP_EXHAUST_PRODUCTS.length - total} P1RP products intentionally left without a confirmed photo).`);
+}
+
 export function seedFassProducts() {
   // Guard: this can run before the placeholder seed script has inserted
   // the 'fuel' category row (categories are seeded separately, and this
@@ -518,6 +700,7 @@ migrate();
 seedFassProducts();
 seedDccTurbos();
 seedP1rp();
+seedP1rpImages();
 
 if (process.argv.includes('--migrate')) {
   console.log('Migration applied to', DB_PATH);
