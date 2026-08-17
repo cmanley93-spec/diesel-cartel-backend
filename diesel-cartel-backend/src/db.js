@@ -228,6 +228,11 @@ const DCC_TURBO_PRODUCTS = [
   { id: 'dcc-turbo-88-103', sku: 'DCCT88103NG', name: 'DCC Billet Turbocharger — Next Gen 88/103mm, 1.58 AR', priceCents: 203818, weightLbs: 31, description: 'DCC Next Gen billet turbocharger, 88/103mm compressor wheel, 1.58 A/R turbine housing. Extra-large frame sized for serious big-single or compound builds chasing higher airflow. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
   { id: 'dcc-turbo-88-gt50', sku: 'DCCT88GT50', name: 'DCC Ball Bearing Turbocharger — 88mm/GT50, T6 Housing, 1.24 AR', priceCents: 291231, weightLbs: 29, description: 'DCC ball bearing turbocharger, 88mm/GT50-class compressor wheel, T6 turbine housing, 1.24 A/R. Ball bearing center cartridge for quicker spool response versus a journal-bearing unit of the same size. Extra-large frame for big-single or compound race/tow builds. Universal frame-size unit — not a direct bolt-on replacement.' },
   { id: 'dcc-turbo-94-113', sku: 'DCCT94113', name: 'DCC Billet Turbocharger — 94/113mm, T6 Housing, 1.24 AR', priceCents: 334938, weightLbs: 36, description: 'DCC billet turbocharger, 94/113mm compressor wheel, T6 turbine housing, 1.24 A/R. The largest frame in the DCC turbo lineup — built for serious compound/big-single race and heavy-tow applications chasing maximum airflow. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-6973', sku: 'DCCT6973', name: 'DCC Billet Turbocharger — 69/73mm, 0.91 AR T4 Divided', priceCents: 98923, weightLbs: 25, description: 'DCC billet turbocharger, 69mm compressor with a 73mm turbine wheel (80/73 turbine option also available). T4 divided turbine housing, 0.91 A/R, 4" Marmon discharge outlet. Rated for roughly 950 hp at the flywheel. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-6773-t4', sku: 'DCCT6773T4', name: 'DCC Dual Ball Bearing Turbocharger — 67.7mm, T4 Divided, 1.01 AR', priceCents: 149914, weightLbs: 34, description: 'DCC dual ceramic ball bearing turbocharger, 67.7mm compressor wheel, T4 divided turbine housing, 1.01 A/R. Ball bearing center cartridge for quicker spool response. Smallest frame in this series, suited to lower-lag big-single or compound builds. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-72-t4', sku: 'DCCT72T4', name: 'DCC Dual Ball Bearing Turbocharger — 72mm, T4 Divided, 1.01 AR', priceCents: 149914, weightLbs: 34, description: 'DCC dual ceramic ball bearing turbocharger, 72mm compressor wheel, T4 divided turbine housing, 1.01 A/R. Ball bearing center cartridge for quicker spool response. Mid frame in this series for a broader power range. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-76-t4', sku: 'DCCT76T4', name: 'DCC Dual Ball Bearing Turbocharger — 76mm, T4 Divided, 1.01 AR', priceCents: 149914, weightLbs: 34, description: 'DCC dual ceramic ball bearing turbocharger, 76mm compressor wheel, T4 divided turbine housing, 1.01 A/R. Ball bearing center cartridge for quicker spool response. Step up in flow from the 72mm frame for bigger power targets. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
+  { id: 'dcc-turbo-80-t4', sku: 'DCCT80T4', name: 'DCC Dual Ball Bearing Turbocharger — 80mm, T4 Divided, 1.01 AR', priceCents: 149914, weightLbs: 34, description: 'DCC dual ceramic ball bearing turbocharger, 80mm compressor wheel, T4 divided turbine housing, 1.01 A/R. Ball bearing center cartridge for quicker spool response. Largest frame in this series for serious big-single or compound race/tow builds. Universal frame-size unit for custom turbo systems — not a direct bolt-on replacement.' },
 ];
 
 export function seedDccTurbos() {
@@ -268,6 +273,214 @@ export function seedDccTurbos() {
   console.log(`[seedDccTurbos] inserted ${inserted}/${DCC_TURBO_PRODUCTS.length} new rows this run; ${dccCount} DCC rows total in DB now.`);
 }
 
+// ============================================================
+// P1 Race Products (P1RP) — Canadian-made diesel exhaust systems.
+// Cody is an authorized P1RP dealer; prices below are P1RP's own
+// listed CAD pricing (they're already a Canadian company, so no
+// USD->CAD conversion or markup is applied here — same "use the
+// real listed price" approach as the FASS batches). Compiled from
+// p1rp.com's own product catalog (144 of their ~172 listed items —
+// EGR/CCV delete kits, "Power Bundle" combo packages, and apparel
+// were left out as out-of-scope for a straight parts catalog).
+// Listed under the real "P1RP" brand name since this is a genuine
+// supplier relationship, unlike the reference-only DCC turbo batch.
+// Same INSERT OR IGNORE safety as the other batches: only adds
+// missing rows, never overwrites a price/stock/active edit made in
+// Admin -> Products on a later deploy. weight_lbs intentionally left
+// NULL here (not collected in this pass) — checkout.js already falls
+// back to a per-category shipping estimate when weight is unset.
+// ============================================================
+const P1RP_EXHAUST_PRODUCTS = [
+  // === Cummins (RAM/Dodge 5.9L/6.7L, 12V/24V) ===
+  { id: 'p1rp-s6126plm', sku: 'S6126PLM', name: '2004.5-2007 RAM Cummins 2500/3500 "600/610" 4" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 64999, description: 'A 4-inch turbo-back exhaust system without a muffler for 2004.5-2007 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-s6126slm', sku: 'S6126SLM', name: '2004.5-2007 RAM Cummins 2500/3500 "600/610" 4" Turbo Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 101999, description: 'T409 stainless steel 4-inch turbo-back exhaust system without a muffler for 2004.5-2007 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-s6126p', sku: 'S6126P', name: '2004.5-2007 RAM Cummins 2500/3500 "600/610" 4" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 89999, description: '4-inch turbo-back exhaust system with muffler for 2004.5-2007 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-s61160plm', sku: 'S61160PLM', name: '2004.5-2009 RAM Cummins 2500/3500 "600/610" 5" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 91999, description: '5-inch turbo-back exhaust system without a muffler for 2004.5-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-s61160slm', sku: 'S61160SLM', name: '2004.5-2009 RAM Cummins 2500/3500 "600/610" 5" Turbo Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 129999, description: 'T409 stainless steel 5-inch turbo-back exhaust system without a muffler for 2004.5-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-s61160p', sku: 'S61160P', name: '2004.5-2009 RAM Cummins 2500/3500 "600/610" 5" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 97999, description: '5-inch turbo-back exhaust system with muffler for 2004.5-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6126p', sku: 'C6126P', name: '2007-2009 Cummins 2500/3500 4" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 79999, description: '4-inch turbo-back exhaust system with muffler for 2007-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6116plm', sku: 'C6116PLM', name: '2007-2009 Cummins 2500/3500 5" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 89999, description: '5-inch turbo-back exhaust system without a muffler for 2007-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6126plm', sku: 'C6126PLM', name: '2007-2009 RAM Cummins 2500/3500 4" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 64999, description: '4-inch turbo-back exhaust system without a muffler for 2007-2009 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal439', sku: 'CDAL439', name: '2007-2012 RAM Cummins 2500/3500 4" Down pipe', platformSlug: 'cummins', priceCents: 37999, description: '4-inch aluminized downpipe for 2007-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cds9439', sku: 'CDS9439', name: '2007-2012 RAM Cummins 2500/3500 4" Down pipe T409', platformSlug: 'cummins', priceCents: 47999, description: 'T409 stainless steel 4-inch downpipe for 2007-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal437', sku: 'CDAL437', name: '2007-2012 RAM Cummins 2500/3500 4" Race Pipe', platformSlug: 'cummins', priceCents: 28999, description: '4-inch off-road race pipe (muffler delete) for 2007-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal443', sku: 'CDAL443', name: '2007.5-2012 RAM Cummins 2500/3500 4" Race Pipe with Muffler', platformSlug: 'cummins', priceCents: 51999, description: '4-inch race pipe with muffler for 2007.5-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6142p', sku: 'C6142P', name: '2010-2012 RAM Cummins 2500/3500 - 4" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 84999, description: '4-inch turbo-back exhaust system with muffler for 2010-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6146plm', sku: 'C6146PLM', name: '2010-2012 RAM Cummins 2500/3500 5" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 89999, description: '5-inch turbo-back exhaust system without a muffler for 2010-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6146p', sku: 'C6146P', name: '2010-2012 RAM Cummins 2500/3500 5" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 99999, description: '5-inch turbo-back exhaust system with muffler for 2010-2012 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal441', sku: 'CDAL441', name: '2013-2018 RAM Cummins 2500/3500 4" Race Pipe', platformSlug: 'cummins', priceCents: 38999, description: '4-inch off-road race pipe (muffler delete) for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal442', sku: 'CDAL442', name: '2013-2018 RAM Cummins 2500/3500 4" Race Pipe with Muffler', platformSlug: 'cummins', priceCents: 46999, description: '4-inch race pipe with muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cds9442', sku: 'CDS9442', name: '2013-2018 RAM Cummins 2500/3500 4" Race Pipe with Muffler T409', platformSlug: 'cummins', priceCents: 67999, description: 'T409 stainless steel 4-inch race pipe with muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6145p', sku: 'C6145P', name: '2013-2018 RAM Cummins 2500/3500 4" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 82999, description: '4-inch turbo-back exhaust system with muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6145plm', sku: 'C6145PLM', name: '2013-2018 RAM Cummins 2500/3500 4" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 70999, description: '4-inch turbo-back exhaust system without a muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6145slm', sku: 'C6145SLM', name: '2013-2018 RAM Cummins 2500/3500 4" Turbo Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 97999, description: 'T409 stainless steel 4-inch turbo-back exhaust system without a muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6147plm', sku: 'C6147PLM', name: '2013-2018 RAM Cummins 2500/3500 5" Turbo Back w/o Muffler', platformSlug: 'cummins', priceCents: 90999, description: '5-inch turbo-back exhaust system without a muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6147slm', sku: 'C6147SLM', name: '2013-2018 RAM Cummins 2500/3500 5" Turbo Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 134999, description: 'T409 stainless steel 5-inch turbo-back exhaust system without a muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6147p', sku: 'C6147P', name: '2013-2018 RAM Cummins 2500/3500 5" Turbo Back with Muffler', platformSlug: 'cummins', priceCents: 101999, description: '5-inch turbo-back exhaust system with muffler for 2013-2018 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal444', sku: 'CDAL444', name: '2013-2018 RAM Cummins 3500/4500/5500 Cab & Chassis 4" Race Pipe', platformSlug: 'cummins', priceCents: 52999, description: '4-inch off-road race pipe for 2013-2018 RAM Cummins 3500/4500/5500 cab & chassis trucks.' },
+  { id: 'p1rp-c6149p', sku: 'C6149P', name: '2019-2024 RAM Cummins 2500/3500 4" Down Pipe Back with Muffler', platformSlug: 'cummins', priceCents: 81999, description: '4-inch down-pipe-back exhaust system with muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal447', sku: 'CDAL447', name: '2019-2024 RAM Cummins 2500/3500 4" Race Pipe', platformSlug: 'cummins', priceCents: 39999, description: '4-inch off-road race pipe for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cds9447', sku: 'CDS9447', name: '2019-2024 RAM Cummins 2500/3500 4" Race Pipe T409', platformSlug: 'cummins', priceCents: 54999, description: 'T409 stainless steel 4-inch off-road race pipe for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cdal448', sku: 'CDAL448', name: '2019-2024 RAM Cummins 2500/3500 4" Race Pipe with Muffler', platformSlug: 'cummins', priceCents: 51999, description: '4-inch race pipe with muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-cds9448', sku: 'CDS9448', name: '2019-2024 RAM Cummins 2500/3500 4" Race Pipe with Muffler T409', platformSlug: 'cummins', priceCents: 72999, description: 'T409 stainless steel 4-inch race pipe with muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6149plm', sku: 'C6149PLM', name: '2019-2024 RAM Cummins 2500/3500 4" Down Pipe Back w/o Muffler', platformSlug: 'cummins', priceCents: 72999, description: '4-inch down-pipe-back exhaust system without a muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6149slm', sku: 'C6149SLM', name: '2019-2024 RAM Cummins 2500/3500 4" Down Pipe Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 97999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6151p', sku: 'C6151P', name: '2019-2024 RAM Cummins 2500/3500 5" Down Pipe Back with Muffler', platformSlug: 'cummins', priceCents: 102999, description: '5-inch down-pipe-back exhaust system with muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6151plm', sku: 'C6151PLM', name: '2019-2024 RAM Cummins 2500/3500 5" Down Pipe Back w/o Muffler', platformSlug: 'cummins', priceCents: 91999, description: '5-inch down-pipe-back exhaust system without a muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+  { id: 'p1rp-c6151slm', sku: 'C6151SLM', name: '2019-2024 RAM Cummins 2500/3500 5" Down Pipe Back w/o Muffler T409', platformSlug: 'cummins', priceCents: 129999, description: 'T409 stainless steel 5-inch down-pipe-back exhaust system without a muffler for 2019-2024 RAM Cummins 2500/3500 trucks.' },
+
+  // === Duramax (GM/Chevrolet/GMC 6.6L LB7-L5P) ===
+  { id: 'p1rp-c6004plm', sku: 'C6004PLM', name: '2007-2010 GM Duramax 2500/3500 4" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 89999, description: '4-inch down-pipe-back exhaust system without a muffler for 2007-2010 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6004p', sku: 'C6004P', name: '2007-2010 GM Duramax 2500/3500 4" Down Pipe Back with Muffler', platformSlug: 'duramax', priceCents: 95999, description: '4-inch down-pipe-back exhaust system with muffler for 2007-2010 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6020plm', sku: 'C6020PLM', name: '2007-2010 GM Duramax 2500/3500 5" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 94999, description: '5-inch down-pipe-back exhaust system without a muffler for 2007-2010 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6044plm', sku: 'C6044PLM', name: '2011-2015 GM Duramax 2500/3500 4" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 79999, description: '4-inch down-pipe-back exhaust system without a muffler for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6044p', sku: 'C6044P', name: '2011-2015 GM Duramax 2500/3500 4" Down Pipe Back with Muffler', platformSlug: 'duramax', priceCents: 85999, description: '4-inch down-pipe-back exhaust system with muffler for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgmal426', sku: 'CGMAL426', name: '2011-2015 GM Duramax 2500/3500 4" Race Pipe', platformSlug: 'duramax', priceCents: 47999, description: '4-inch off-road race pipe for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgms9426', sku: 'CGMS9426', name: '2011-2015 GM Duramax 2500/3500 4" Race Pipe T409', platformSlug: 'duramax', priceCents: 63999, description: 'T409 stainless steel 4-inch off-road race pipe for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgmal432', sku: 'CGMAL432', name: '2011-2015 GM Duramax 2500/3500 4" Race Pipe with Muffler', platformSlug: 'duramax', priceCents: 59999, description: '4-inch race pipe with muffler for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6048plm', sku: 'C6048PLM', name: '2011-2015 GM Duramax 2500/3500 5" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 89999, description: '5-inch down-pipe-back exhaust system without a muffler for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6048slm', sku: 'C6048SLM', name: '2011-2015 GM Duramax 2500/3500 5" Down Pipe Back w/o Muffler T409', platformSlug: 'duramax', priceCents: 124999, description: 'T409 stainless steel 5-inch down-pipe-back exhaust system without a muffler for 2011-2015 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6045plm', sku: 'C6045PLM', name: '2015.5-2016 GM Duramax 2500/3500 4" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 86999, description: '4-inch down-pipe-back exhaust system without a muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6045slm', sku: 'C6045SLM', name: '2015.5-2016 GM Duramax 2500/3500 4" Down Pipe Back w/o Muffler T409', platformSlug: 'duramax', priceCents: 99999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6045p', sku: 'C6045P', name: '2015.5-2016 GM Duramax 2500/3500 4" Down Pipe Back with Muffler', platformSlug: 'duramax', priceCents: 92999, description: '4-inch down-pipe-back exhaust system with muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgmal429', sku: 'CGMAL429', name: '2015.5-2016 GM Duramax 2500/3500 4" Race Pipe', platformSlug: 'duramax', priceCents: 49999, description: '4-inch off-road race pipe for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgms9429', sku: 'CGMS9429', name: '2015.5-2016 GM Duramax 2500/3500 4" Race Pipe T409', platformSlug: 'duramax', priceCents: 64999, description: 'T409 stainless steel 4-inch off-road race pipe for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-cgmal431', sku: 'CGMAL431', name: '2015.5-2016 GM Duramax 2500/3500 4" Race Pipe with Muffler', platformSlug: 'duramax', priceCents: 64999, description: '4-inch race pipe with muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6049plm', sku: 'C6049PLM', name: '2015.5-2016 GM Duramax 2500/3500 5" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 89999, description: '5-inch down-pipe-back exhaust system without a muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6049p', sku: 'C6049P', name: '2015.5-2016 GM Duramax 2500/3500 5" Down Pipe Back with Muffler', platformSlug: 'duramax', priceCents: 99999, description: '5-inch down-pipe-back exhaust system with muffler for 2015.5-2016 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6057p', sku: 'C6057P', name: '2016-2018 Chevy/GMC Colorado/Canyon Duramax 3" Turbo Back with Muffler', platformSlug: 'duramax', priceCents: 70999, description: '3-inch turbo-back exhaust system with muffler for 2016-2018 Chevrolet Colorado/GMC Canyon Duramax trucks.' },
+  { id: 'p1rp-cgmald17', sku: 'CGMALD17', name: '2017-2026 Duramax 3.5" L5P Downpipe', platformSlug: 'duramax', priceCents: 38999, description: '3.5-inch aluminized downpipe for 2017-2026 GM Duramax L5P trucks.' },
+  { id: 'p1rp-cgmal430', sku: 'CGMAL430', name: '2017-2026 GM Duramax 2500/3500 4" Race Pipe', platformSlug: 'duramax', priceCents: 66999, description: '4-inch off-road race pipe for 2017-2026 GM Duramax 2500/3500 trucks.' },
+  { id: 'p1rp-c6056plm', sku: 'C6056PLM', name: '2017-2026 GM Duramax 2500/3500 HD Duramax L5P 4" Down Pipe Back w/o Muffler', platformSlug: 'duramax', priceCents: 86999, description: '4-inch down-pipe-back exhaust system without a muffler for 2017-2026 GM Duramax L5P 2500/3500 trucks.' },
+  { id: 'p1rp-c6056p', sku: 'C6056P', name: '2017-2026 GM Duramax 2500/3500 HD Duramax L5P 4" Down Pipe Back with Muffler', platformSlug: 'duramax', priceCents: 94999, description: '4-inch down-pipe-back exhaust system with muffler for 2017-2026 GM Duramax L5P 2500/3500 trucks.' },
+  { id: 'p1rp-cgmal433', sku: 'CGMAL433', name: '2017-2026 GM Duramax 3500/3500 4" Race Pipe with Muffler', platformSlug: 'duramax', priceCents: 71999, description: '4-inch race pipe with muffler for 2017-2026 GM Duramax L5P trucks.' },
+  { id: 'p1rp-c6056slm', sku: 'C6056SLM', name: '2017-2026 GM Duramax 3500/3500 HD Duramax L5P 4" Down Pipe Back w/o Muffler T409', platformSlug: 'duramax', priceCents: 106999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2017-2026 GM Duramax L5P trucks.' },
+
+  // === Powerstroke (Ford 6.0L/6.4L/6.7L/7.3L/3.0L) ===
+  { id: 'p1rp-c6254plm', sku: 'C6254PLM', name: '2008-2010 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 71999, description: '4-inch down-pipe-back exhaust system without a muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6254slm', sku: 'C6254SLM', name: '2008-2010 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler T409', platformSlug: 'powerstroke', priceCents: 91999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6270p', sku: 'C6270P', name: '2008-2010 Ford Powerstroke F250/350/450 4" Down Pipe Back with Muffler', platformSlug: 'powerstroke', priceCents: 82999, description: '4-inch down-pipe-back exhaust system with muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal457', sku: 'CFAL457', name: '2008-2010 Ford Powerstroke F250/350/450 4" Race Pipe', platformSlug: 'powerstroke', priceCents: 31999, description: '4-inch off-road race pipe for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfs9457', sku: 'CFS9457', name: '2008-2010 Ford Powerstroke F250/350/450 4" Race Pipe T409', platformSlug: 'powerstroke', priceCents: 39999, description: 'T409 stainless steel 4-inch off-road race pipe for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal464', sku: 'CFAL464', name: '2008-2010 Ford Powerstroke F250/350/450 4" Race Pipe with Muffler', platformSlug: 'powerstroke', priceCents: 45999, description: '4-inch race pipe with muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6268plm', sku: 'C6268PLM', name: '2008-2010 Ford Powerstroke F250/350/450 5" Down Pipe Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 79999, description: '5-inch down-pipe-back exhaust system without a muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6268slm', sku: 'C6268SLM', name: '2008-2010 Ford Powerstroke F250/350/450 5" Down Pipe Back w/o Muffler T409', platformSlug: 'powerstroke', priceCents: 99999, description: 'T409 stainless steel 5-inch down-pipe-back exhaust system without a muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6268p', sku: 'C6268P', name: '2008-2010 Ford Powerstroke F250/350/450 5" Down Pipe Back with Muffler', platformSlug: 'powerstroke', priceCents: 94999, description: '5-inch down-pipe-back exhaust system with muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6241plm', sku: 'C6241PLM', name: '2008-2010 Ford Powerstroke F250/F350/F450 4" Turbo Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 91999, description: '4-inch turbo-back exhaust system without a muffler for 2008-2010 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6260plm', sku: 'C6260PLM', name: '2011-2016 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 69999, description: '4-inch down-pipe-back exhaust system without a muffler for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6260slm', sku: 'C6260SLM', name: '2011-2016 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler T409', platformSlug: 'powerstroke', priceCents: 91999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6262p', sku: 'C6262P', name: '2011-2016 Ford Powerstroke F250/350/450 4" Down Pipe Back with Muffler', platformSlug: 'powerstroke', priceCents: 92999, description: '4-inch down-pipe-back exhaust system with muffler for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal458', sku: 'CFAL458', name: '2011-2016 Ford Powerstroke F250/350/450 4" Race Pipe', platformSlug: 'powerstroke', priceCents: 38999, description: '4-inch off-road race pipe for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfs9458', sku: 'CFS9458', name: '2011-2016 Ford Powerstroke F250/350/450 4" Race Pipe T409', platformSlug: 'powerstroke', priceCents: 49999, description: 'T409 stainless steel 4-inch off-road race pipe for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal462', sku: 'CFAL462', name: '2011-2016 Ford Powerstroke F250/350/450 4" Race Pipe with Muffler', platformSlug: 'powerstroke', priceCents: 51999, description: '4-inch race pipe with muffler for 2011-2016 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6280plm', sku: 'C6280PLM', name: '2011-2019 Ford Powerstroke F250/350/450 5" Down Pipe Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 92999, description: '5-inch down-pipe-back exhaust system without a muffler for 2011-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6280slm', sku: 'C6280SLM', name: '2011-2019 Ford Powerstroke F250/350/450 5" Down Pipe Back w/o Muffler T409', platformSlug: 'powerstroke', priceCents: 119999, description: 'T409 stainless steel 5-inch down-pipe-back exhaust system without a muffler for 2011-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6292slm', sku: 'C6292SLM', name: '2017-2019 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler T409', platformSlug: 'powerstroke', priceCents: 91999, description: 'T409 stainless steel 4-inch down-pipe-back exhaust system without a muffler for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6292p', sku: 'C6292P', name: '2017-2019 Ford Powerstroke F250/350/450 4" Down Pipe Back with Muffler', platformSlug: 'powerstroke', priceCents: 86999, description: '4-inch down-pipe-back exhaust system with muffler for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6292plm', sku: 'C6292PLM', name: '2017-2019 Ford Powerstroke F250/350/450 4" Down Pipe Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 71999, description: '4-inch down-pipe-back exhaust system without a muffler for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal461', sku: 'CFAL461', name: '2017-2019 Ford Powerstroke F250/350/450 4" Race Pipe', platformSlug: 'powerstroke', priceCents: 38999, description: '4-inch off-road race pipe for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfs9461', sku: 'CFS9461', name: '2017-2019 Ford Powerstroke F250/350/450 4" Race Pipe T409', platformSlug: 'powerstroke', priceCents: 51999, description: 'T409 stainless steel 4-inch off-road race pipe for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfal463', sku: 'CFAL463', name: '2017-2019 Ford Powerstroke F250/350/450 4" Race Pipe with Muffler', platformSlug: 'powerstroke', priceCents: 51999, description: '4-inch race pipe with muffler for 2017-2019 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-c6294plm', sku: 'C6294PLM', name: '2018-2019 Ford F150 3.0L Powerstroke 3.5" Turbo Back w/o Muffler', platformSlug: 'powerstroke', priceCents: 65999, description: '3.5-inch turbo-back exhaust system without a muffler for 2018-2019 Ford F150 3.0L Power Stroke trucks.' },
+  { id: 'p1rp-c6294p', sku: 'C6294P', name: '2018-2019 Ford F150 3.0L Powerstroke 3.5" Turbo Back with Muffler', platformSlug: 'powerstroke', priceCents: 74999, description: '3.5-inch turbo-back exhaust system with muffler for 2018-2019 Ford F150 3.0L Power Stroke trucks.' },
+  { id: 'p1rp-cfal465', sku: 'CFAL465', name: '2018-2019 Ford F150 Powerstroke 3.5" Race Pipe', platformSlug: 'powerstroke', priceCents: 39999, description: '3.5-inch off-road race pipe for 2018-2019 Ford F150 Power Stroke trucks.' },
+  { id: 'p1rp-c6293slm', sku: 'C6293SLM', name: '2020-2026 F250/350/450 6.7L Powerstroke 4" Stainless Turbo Back No Muffler', platformSlug: 'powerstroke', priceCents: 89999, description: 'T304 stainless steel 4-inch turbo-back exhaust system without a muffler for 2020-2026 Ford F250/350/450 6.7L Power Stroke trucks.' },
+  { id: 'p1rp-c6293plm', sku: 'C6293PLM', name: '2020-2026 F250/350/450 6.7L Powerstroke 4" Turbo Back No Muffler', platformSlug: 'powerstroke', priceCents: 79999, description: '4-inch turbo-back exhaust system without a muffler for 2020-2026 Ford F250/350/450 6.7L Power Stroke trucks.' },
+  { id: 'p1rp-c6281slm', sku: 'C6281SLM', name: '2020-2026 Ford F250/350/450 5" Stainless Turbo Back Exhaust - No Muffler', platformSlug: 'powerstroke', priceCents: 114999, description: 'T304 stainless steel 5-inch turbo-back exhaust system without a muffler for 2020-2026 Ford F250/350/450 Power Stroke trucks.' },
+  { id: 'p1rp-c6281plm', sku: 'C6281PLM', name: '2020-2026 Ford F250/350/450 5" Turbo Back Exhaust - No Muffler', platformSlug: 'powerstroke', priceCents: 99999, description: '5-inch turbo-back exhaust system without a muffler for 2020-2026 Ford F250/350/450 Power Stroke trucks.' },
+  { id: 'p1rp-c6281p', sku: 'C6281P', name: '2020-2026 Ford F250/350/450 5" Turbo Back Exhaust - With Muffler', platformSlug: 'powerstroke', priceCents: 109999, description: '5-inch turbo-back exhaust system with muffler for 2020-2026 Ford F250/350/450 Power Stroke trucks.' },
+  { id: 'p1rp-cfal466', sku: 'CFAL466', name: '2020-2026 Ford Powerstroke F250/350/450 4" Race Pipe', platformSlug: 'powerstroke', priceCents: 42999, description: '4-inch off-road race pipe for 2020-2026 Ford Power Stroke F250/350/450 trucks.' },
+  { id: 'p1rp-cfald20', sku: 'CFALD20', name: '2023-2026 Ford F250/350/450 DownPipe', platformSlug: 'powerstroke', priceCents: 39999, description: 'Aluminized downpipe for 2023-2026 Ford F250/350/450 Power Stroke trucks.' },
+
+  // === Universal (EcoDiesel, Sprinter, Titan XD, Jeep, and non-vehicle-specific tips) ===
+  { id: 'p1rp-c6301slm', sku: 'C6301SLM', name: '2010-2018 Mercedes Benz Sprinter 3" Stainless Turbo Back Race System', platformSlug: 'universal', priceCents: 69999, description: 'T304 stainless steel 3-inch turbo-back race exhaust system for 2010-2018 Mercedes-Benz Sprinter vans.' },
+  { id: 'p1rp-c6301plm', sku: 'C6301PLM', name: '2010-2018 Mercedes Benz Sprinter 3" Turbo Back Race System w/o Muffler', platformSlug: 'universal', priceCents: 51999, description: '3-inch turbo-back race exhaust system without a muffler for 2010-2018 Mercedes-Benz Sprinter vans.' },
+  { id: 'p1rp-cdal446', sku: 'CDAL446', name: '2014-2018 RAM 1500 3.0L EcoDiesel 3" Race Pipe', platformSlug: 'universal', priceCents: 35999, description: '3-inch off-road race pipe for 2014-2018 RAM 1500 3.0L EcoDiesel trucks.' },
+  { id: 'p1rp-cds9446', sku: 'CDS9446', name: '2014-2018 RAM 1500 EcoDiesel 3" Race Pipe T409', platformSlug: 'universal', priceCents: 55999, description: 'T409 stainless steel 3-inch off-road race pipe for 2014-2018 RAM 1500 EcoDiesel trucks.' },
+  { id: 'p1rp-cnal401', sku: 'CNAL401', name: '2016-2019 Nissan Titan XD 4" Race Pipe', platformSlug: 'universal', priceCents: 45999, description: '4-inch off-road race pipe for 2016-2019 Nissan Titan XD trucks.' },
+  { id: 'p1rp-cjal401', sku: 'CJAL401', name: '2021-2023 Jeep Gladiator 3.0L EcoDiesel 3" Race Pipe', platformSlug: 'universal', priceCents: 49999, description: '3-inch off-road race pipe for 2021-2023 Jeep Gladiator 3.0L EcoDiesel trucks.' },
+  { id: 'p1rp-cjs9401', sku: 'CJS9401', name: '2021-2023 Jeep Gladiator 3.0L EcoDiesel 3" Race Pipe T409', platformSlug: 'universal', priceCents: 56999, description: 'T409 stainless steel 3-inch off-road race pipe for 2021-2023 Jeep Gladiator 3.0L EcoDiesel trucks.' },
+
+  // === P1RP / MBRP exhaust tips (universal, bolt-on) ===
+  { id: 'p1rp-t5049', sku: 'T5049', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 11999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5050', sku: 'T5050', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 9999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5051', sku: 'T5051', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 8999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5051blk', sku: 'T5051BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor BLK', platformSlug: 'universal', priceCents: 10999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5052', sku: 'T5052', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 9499, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5053', sku: 'T5053', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 10999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5053blk', sku: 'T5053BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor BLK', platformSlug: 'universal', priceCents: 12999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5072', sku: 'T5072', name: 'Diesel Exhaust Tip - 4" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 13499, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5072blk', sku: 'T5072BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 16999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5072cf', sku: 'T5072CF', name: 'Carbon Fiber Diesel Exhaust Tip - 4" Inlet - 6" OD', platformSlug: 'universal', priceCents: 39999, description: 'Carbon-fiber-wrapped stainless bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5073', sku: 'T5073', name: 'Diesel Exhaust Tip - 4" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 12999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5074', sku: 'T5074', name: 'Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 13499, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5074blk', sku: 'T5074BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 16499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5075', sku: 'T5075', name: 'Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 11999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5075blk', sku: 'T5075BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 12999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5075cf', sku: 'T5075CF', name: 'Carbon Fiber Diesel Exhaust Tip - 5" Inlet - 6" OD', platformSlug: 'universal', priceCents: 39999, description: 'Carbon-fiber-wrapped stainless bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5081', sku: 'T5081', name: 'Diesel Exhaust Tip - 4" Inlet - 4" OD - Armor Pro', platformSlug: 'universal', priceCents: 9999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 4-inch outlet.' },
+  { id: 'p1rp-t5085', sku: 'T5085', name: 'Diesel Exhaust Tip - 5" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 13499, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5086', sku: 'T5086', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 14999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5110', sku: 'T5110', name: 'Diesel Exhaust Tip - 4" Inlet - 4" OD - Armor Pro', platformSlug: 'universal', priceCents: 9999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 4-inch outlet.' },
+  { id: 'p1rp-t5111blk', sku: 'T5111BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - Armor BLK', platformSlug: 'universal', priceCents: 19999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet.' },
+  { id: 'p1rp-t5124', sku: 'T5124', name: 'Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor Pro', platformSlug: 'universal', priceCents: 12999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5124blk', sku: 'T5124BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor BLK', platformSlug: 'universal', priceCents: 14999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5125', sku: 'T5125', name: 'Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 16999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5125blk', sku: 'T5125BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 17999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5126', sku: 'T5126', name: 'Diesel Exhaust Tip - 4" Inlet - 7" OD - Armor Pro', platformSlug: 'universal', priceCents: 20499, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 7-inch outlet.' },
+  { id: 'p1rp-t5126blk', sku: 'T5126BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 7" OD - Armor BLK', platformSlug: 'universal', priceCents: 21999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 7-inch outlet.' },
+  { id: 'p1rp-t5127', sku: 'T5127', name: 'Diesel Exhaust Tip - 5" Inlet - 7" OD - Armor Pro', platformSlug: 'universal', priceCents: 20999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 7-inch outlet.' },
+  { id: 'p1rp-t5127blk', sku: 'T5127BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 7" OD - Armor BLK', platformSlug: 'universal', priceCents: 22499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 7-inch outlet.' },
+  { id: 'p1rp-t5128', sku: 'T5128', name: 'Diesel Exhaust Tip - 4" Inlet - 8" OD - Armor Pro', platformSlug: 'universal', priceCents: 21999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 8-inch outlet.' },
+  { id: 'p1rp-t5128blk', sku: 'T5128BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 8" OD - Armor BLK', platformSlug: 'universal', priceCents: 25499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 8-inch outlet.' },
+  { id: 'p1rp-t5129', sku: 'T5129', name: 'Diesel Exhaust Tip - 5" Inlet - 8" OD - Armor Pro', platformSlug: 'universal', priceCents: 21999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 8-inch outlet.' },
+  { id: 'p1rp-t5129blk', sku: 'T5129BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 8" OD - Armor BLK', platformSlug: 'universal', priceCents: 24999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 8-inch outlet.' },
+  { id: 'p1rp-t5130', sku: 'T5130', name: 'Diesel Exhaust Tip - 4" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 16999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5130blk', sku: 'T5130BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 18999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5154', sku: 'T5154', name: 'Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor Pro', platformSlug: 'universal', priceCents: 20999, description: 'T304 stainless steel polished bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5154blk', sku: 'T5154BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 21499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5164blk', sku: 'T5164BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor BLK', platformSlug: 'universal', priceCents: 19999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5165blk', sku: 'T5165BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 5" OD - Armor BLK', platformSlug: 'universal', priceCents: 18999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 5-inch outlet.' },
+  { id: 'p1rp-t5166blk', sku: 'T5166BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 23499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5167blk', sku: 'T5167BLK', name: 'Black Coated Diesel Exhaust Tip - 5" Inlet - 6" OD - Armor BLK', platformSlug: 'universal', priceCents: 22499, description: 'Black-coated stainless steel bolt-on exhaust tip with a 5-inch inlet and 6-inch outlet.' },
+  { id: 'p1rp-t5169blk', sku: 'T5169BLK', name: 'Black Coated Diesel Exhaust Tip - 4" Inlet - 4" OD - Armor BLK', platformSlug: 'universal', priceCents: 14999, description: 'Black-coated stainless steel bolt-on exhaust tip with a 4-inch inlet and 4-inch outlet.' },
+];
+
+export function seedP1rp() {
+  db.prepare(`
+    INSERT OR IGNORE INTO categories (slug, name, blurb, icon)
+    VALUES ('exhaust', 'Exhaust Systems', 'Downpipes, turbo-back & cat-back kits', 'exhaust')
+  `).run();
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO products
+      (id, sku, name, brand, category_slug, platform_slug, price_cents, description, weight_lbs, supplier, active, stock_qty)
+    VALUES
+      (@id, @sku, @name, 'P1RP', 'exhaust', @platformSlug, @priceCents, @description, NULL, 'P1 Race Products (authorized dealer)', 1, 3)
+  `);
+  let inserted = 0;
+  for (const p of P1RP_EXHAUST_PRODUCTS) {
+    try {
+      const info = insert.run(p);
+      if (info.changes > 0) inserted++;
+    } catch (err) {
+      console.error('[seedP1rp] insert failed for', p.id, '-', err.message);
+    }
+  }
+
+  const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'P1RP'`);
+  for (const p of P1RP_EXHAUST_PRODUCTS) {
+    try {
+      updateName.run({ id: p.id, name: p.name });
+    } catch (err) {
+      console.error('[seedP1rp] update failed for', p.id, '-', err.message);
+    }
+  }
+
+  const p1rpCount = db.prepare(`SELECT COUNT(*) AS c FROM products WHERE brand = 'P1RP'`).get().c;
+  console.log(`[seedP1rp] inserted ${inserted}/${P1RP_EXHAUST_PRODUCTS.length} new rows this run; ${p1rpCount} P1RP rows total in DB now.`);
+}
+
 export function seedFassProducts() {
   // Guard: this can run before the placeholder seed script has inserted
   // the 'fuel' category row (categories are seeded separately, and this
@@ -304,6 +517,7 @@ export function seedFassProducts() {
 migrate();
 seedFassProducts();
 seedDccTurbos();
+seedP1rp();
 
 if (process.argv.includes('--migrate')) {
   console.log('Migration applied to', DB_PATH);
