@@ -1006,12 +1006,127 @@ export function seedSouthBendProducts() {
   console.log(`[seedSouthBendProducts] inserted ${inserted}/${SOUTH_BEND_PRODUCTS.length} new rows this run; ${sbCount} South Bend Clutch rows total in DB now.`);
 }
 
+// No Limit Fabrication — product images.
+// Sourced directly from nolimitfabrication.com's own individual product
+// pages (not category-grid thumbnails, not a reseller) — each URL below
+// was pulled from that exact SKU's own page on their site, matched by
+// name/year-range/platform. Same safety pattern as seedP1rpImages(): only
+// fills in a photo where image_url is currently empty, so it will never
+// clobber a photo you've since replaced in Admin -> Products.
+const NO_LIMIT_IMAGE_MAP = {
+  'nolimit-whistler-1519': 'https://nolimitfabrication.com/images/M198753044.jpg',
+  'nolimit-whistler-1114': 'https://nolimitfabrication.com/images/M198752890.jpg',
+  'nolimit-67-compound': 'https://nolimitfabrication.com/images/M198752389.jpg',
+  'nolimit-whistler-0307': 'https://nolimitfabrication.com/images/M198752674.jpg',
+  'nolimit-retrofit-1114': 'https://nolimitfabrication.com/images/M198750959.jpg',
+  'nolimit-duramax-llylmm-turbo': 'https://nolimitfabrication.com/images/M198752424.jpg',
+  'nolimit-turbo-blanket': 'https://nolimitfabrication.com/images/M198752214.jpg',
+  'nolimit-67-ballbearing': 'https://nolimitfabrication.com/images/M198752649.jpg',
+  'nolimit-intake-2026': 'https://nolimitfabrication.com/images/F198752153.png',
+  'nolimit-intake-1719-s2': 'https://nolimitfabrication.com/images/M198751187.jpg',
+  'nolimit-intake-1116-s2': 'https://nolimitfabrication.com/images/M198751190.jpg',
+  'nolimit-intake-1116-s1': 'https://nolimitfabrication.com/images/M198751171.jpg',
+  'nolimit-intake-1719-s1': 'https://nolimitfabrication.com/images/M198751173.jpg',
+  'nolimit-intake-0810': 'https://nolimitfabrication.com/images/M198752227.jpg',
+  'nolimit-intake-60': 'https://nolimitfabrication.com/images/M198752683.jpg',
+  'nolimit-intake-closedbox-1719': 'https://nolimitfabrication.com/images/F198751114.jpg',
+  'nolimit-intake-premium-1116': 'https://nolimitfabrication.com/images/F198751033.png',
+  'nolimit-intake-30': 'https://nolimitfabrication.com/images/M198742789.jpg',
+  'nolimit-custom-filter': 'https://nolimitfabrication.com/images/M198751003.jpg',
+  'nolimit-prefilter': 'https://nolimitfabrication.com/images/M198752004.jpg',
+  'nolimit-boost-bundle-67': 'https://nolimitfabrication.com/images/M198753040.jpg',
+  'nolimit-hf-bundle-67': 'https://nolimitfabrication.com/images/M198752908.jpg',
+  'nolimit-hf-bundle-64': 'https://nolimitfabrication.com/images/M198752907.jpg',
+  'nolimit-hf-bundle-60': 'https://nolimitfabrication.com/images/M198752905.jpg',
+  'nolimit-ic-piping-67': 'https://nolimitfabrication.com/images/M198753067.jpg',
+  'nolimit-a2w-stage2-67': 'https://nolimitfabrication.com/images/M198752894.jpg',
+  'nolimit-a2w-stage1-67': 'https://nolimitfabrication.com/images/M198752403.jpg',
+  'nolimit-hotside-67': 'https://nolimitfabrication.com/images/M198752494.jpg',
+  'nolimit-coldside-67': 'https://nolimitfabrication.com/images/M198752883.jpg',
+  'nolimit-coldside-60': 'https://nolimitfabrication.com/images/M198752735.jpg',
+  'nolimit-hotside-60': 'https://nolimitfabrication.com/images/M198752700.jpg',
+  'nolimit-hotpipe-64': 'https://nolimitfabrication.com/images/M198752787.jpg',
+  'nolimit-coldside-64': 'https://nolimitfabrication.com/images/M198752520.jpg',
+  'nolimit-downpipe-1114': 'https://nolimitfabrication.com/images/M198752941.jpg',
+  'nolimit-downpipe-1519': 'https://nolimitfabrication.com/images/M198751117.jpg',
+  'nolimit-downpipe-2022': 'https://nolimitfabrication.com/images/M198752632.jpg',
+  'nolimit-icbootset-60': 'https://nolimitfabrication.com/images/M198752598.jpg',
+  'nolimit-icbootset-64': 'https://nolimitfabrication.com/images/M198751041.jpg',
+  'nolimit-a2a-60': 'https://nolimitfabrication.com/images/M198752834.jpg',
+  'nolimit-a2a-64': 'https://nolimitfabrication.com/images/M198752833.jpg',
+  'nolimit-a2a-73': 'https://nolimitfabrication.com/images/M198752835.jpg',
+  'nolimit-lower-ic-hose': 'https://nolimitfabrication.com/images/M198752306.jpg',
+  'nolimit-sil-hose-2x3': 'https://nolimitfabrication.com/images/M198752433.jpg',
+  'nolimit-sil-elbow-390': 'https://nolimitfabrication.com/images/M198752301.jpg',
+  'nolimit-sil-red-335': 'https://nolimitfabrication.com/images/M198752477.jpg',
+  'nolimit-sil-coupler-3x4': 'https://nolimitfabrication.com/images/M198752305.jpg',
+  'nolimit-sil-coupler-3x6': 'https://nolimitfabrication.com/images/M198752302.jpg',
+  'nolimit-sil-coupler-3258': 'https://nolimitfabrication.com/images/M198753066.jpg',
+  'nolimit-hotside-boot-60': 'https://nolimitfabrication.com/images/M198752303.jpg',
+  'nolimit-turbo-circ-line-23': 'https://nolimitfabrication.com/images/M198752912.jpg',
+  'nolimit-coolant-line-1126': 'https://nolimitfabrication.com/images/M198751013.jpg',
+  'nolimit-6r140-pan': 'https://nolimitfabrication.com/images/M198752954.jpg',
+  'nolimit-oilpan-67': 'https://nolimitfabrication.com/images/F198752927.jpg',
+  'nolimit-catch-can': 'https://nolimitfabrication.com/images/M198752124.jpg',
+  'nolimit-venturi': 'https://nolimitfabrication.com/images/M198752126.jpg',
+  'nolimit-diffcover-14bolt': 'https://nolimitfabrication.com/images/F198753073.jpg',
+  'nolimit-sec-coolant-tank-67': 'https://nolimitfabrication.com/images/M198752348.jpg',
+  'nolimit-cp4-bypass': 'https://nolimitfabrication.com/images/M198752602.jpg',
+  'nolimit-primary-coolant-tank-67': 'https://nolimitfabrication.com/images/M198752400.jpg',
+  'nolimit-uppercoolant-1126': 'https://nolimitfabrication.com/images/M198751031.jpg',
+  'nolimit-uppercoolant-60': 'https://nolimitfabrication.com/images/M198752789.jpg',
+  'nolimit-uppipe-64': 'https://nolimitfabrication.com/images/M198751028.jpg',
+  'nolimit-coolanttank-64': 'https://nolimitfabrication.com/images/M198751040.jpg',
+  'nolimit-pass-coolant-fix-64': 'https://nolimitfabrication.com/images/M198751012.jpg',
+  'nolimit-oilcooler-reloc-67': 'https://nolimitfabrication.com/images/M198752498.jpg',
+  'nolimit-battreloc-1719': 'https://nolimitfabrication.com/images/M198752321.jpg',
+  'nolimit-capset-67': 'https://nolimitfabrication.com/images/M198751006.jpg',
+  'nolimit-turbohoseboot-67': 'https://nolimitfabrication.com/images/M198751032.jpg',
+  'nolimit-batteryholddowns': 'https://nolimitfabrication.com/images/M198752482.jpg',
+  'nolimit-hotside-boot-kit-1126': 'https://nolimitfabrication.com/images/F198752448.jpg',
+  'nolimit-deftankplate': 'https://nolimitfabrication.com/images/M198751039.jpg',
+  'nolimit-10r140-pan': 'https://nolimitfabrication.com/images/M198753072.jpg',
+  'nolimit-diffcover-12bolt-9916': 'https://nolimitfabrication.com/images/M198753063.jpg',
+  'nolimit-diffcover-12bolt-99cur': 'https://nolimitfabrication.com/images/M198753050.jpg',
+  'nolimit-reservoircap-67': 'https://nolimitfabrication.com/images/M198752680.jpg',
+  'nolimit-rotaryswitch-1122': 'https://nolimitfabrication.com/images/M198752879.jpg',
+  'nolimit-fuelsump': 'https://nolimitfabrication.com/images/F198751458.jpg',
+  'nolimit-sec-coolant-line-1114': 'https://nolimitfabrication.com/images/M198752184.jpg',
+  'nolimit-molded-hose-67': 'https://nolimitfabrication.com/images/M198752878.jpg',
+  'nolimit-reverse-level-kit': 'https://nolimitfabrication.com/images/M198751047.jpg',
+  'nolimit-traction-bars': 'https://nolimitfabrication.com/images/M198750884.jpg',
+  'nolimit-bodymounts-0816': 'https://nolimitfabrication.com/images/M198753049.jpg',
+  'nolimit-bodymounts-0307': 'https://nolimitfabrication.com/images/M198753048.jpg',
+  'nolimit-radsupport-17': 'https://nolimitfabrication.com/images/M198753028.jpg',
+  'nolimit-bodymounts-9903': 'https://nolimitfabrication.com/images/M198753046.jpg',
+  'nolimit-bumpstop': 'https://nolimitfabrication.com/images/M198751011.jpg',
+};
+
+export function seedNoLimitImages() {
+  const update = db.prepare(`
+    UPDATE products SET image_url = @image_url
+    WHERE id = @id AND brand = 'No Limit Fabrication' AND (image_url IS NULL OR image_url = '')
+  `);
+  let updated = 0;
+  for (const [id, image_url] of Object.entries(NO_LIMIT_IMAGE_MAP)) {
+    try {
+      const info = update.run({ id, image_url });
+      if (info.changes > 0) updated++;
+    } catch (err) {
+      console.error('[seedNoLimitImages] update failed for', id, '-', err.message);
+    }
+  }
+  const total = Object.keys(NO_LIMIT_IMAGE_MAP).length;
+  console.log(`[seedNoLimitImages] set image_url on ${updated}/${total} No Limit Fabrication rows this run.`);
+}
+
 migrate();
 seedFassProducts();
 seedDccTurbos();
 seedP1rp();
 seedP1rpImages();
 seedNoLimitProducts();
+seedNoLimitImages();
 seedSouthBendProducts();
 
 if (process.argv.includes('--migrate')) {
