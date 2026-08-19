@@ -879,9 +879,141 @@ export function seedNoLimitProducts() {
   console.log(`[seedNoLimitProducts] inserted ${inserted}/${total} new rows this run; ${nlCount} No Limit Fabrication rows total in DB now.`);
 }
 
+// South Bend Clutch
+// Pricing/part data sourced from Dirty Diesel Customs (dirtydieselcustom.ca), a
+// Canadian South Bend Clutch dealer — prices are already in CAD, no conversion
+// needed. Every SKU is real South Bend Clutch inventory (clutch kits, master
+// cylinders, flywheels, throw-out bearings, starter spacers) for Cummins,
+// Powerstroke, and Duramax platforms. A handful of older pre-Powerstroke IDI
+// Ford and pre-Duramax GM 6.5L items were excluded since they don't fit the
+// cummins/powerstroke/duramax platform scope.
+// image_url intentionally left unset for all rows — same two-step approach as
+// P1RP/No Limit: photos need their own per-SKU sourcing pass rather than being
+// bulk-pulled from a reseller's site.
+const SOUTH_BEND_PRODUCTS = [
+  { id: 'southbend-hydx-750', sku: 'HYDX.750', name: '2003-2018 Cummins Clutch Master Cylinder', platformSlug: 'cummins', priceCents: 52805, description: 'South Bend Clutch Clutch Master Cylinder for 2003-2018 Cummins trucks. OEM-fit replacement part, part #HYDX.750.' },
+  { id: 'southbend-sdd3250-gk', sku: 'SDD3250-GK', name: '2005.5-2018 Cummins Stage 3 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'cummins', priceCents: 247775, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #SDD3250-GK.' },
+  { id: 'southbend-hydx1-50', sku: 'HYDX1.50', name: '1998-2002 Cummins Clutch Master Cylinder', platformSlug: 'cummins', priceCents: 52805, description: 'South Bend Clutch Clutch Master Cylinder for 1998-2002 Cummins trucks. OEM-fit replacement part, part #HYDX1.50.' },
+  { id: 'southbend-g56-ofek', sku: 'G56-OFEK', name: '2005.5-2018 Cummins Stage 2 Organic/Feramic Clutch Kit - 475HP', platformSlug: 'cummins', priceCents: 215280, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #G56-OFEK.' },
+  { id: 'southbend-nv4500starterspacerwbolts', sku: 'NV4500STARTERSPACERWBOLTS', name: '1994-2004 Cummins South Bend NV4500 Starter Spacer', platformSlug: 'cummins', priceCents: 5801, description: 'South Bend Clutch Starter Spacer for 1994-2004 Cummins trucks. OEM-fit replacement part, part #NV4500STARTERSPACERWBOLTS.' },
+  { id: 'southbend-hydx-max', sku: 'HYDX-MAX', name: '2001-2005 Duramax Hydraulic Throw-Out Bearing', platformSlug: 'duramax', priceCents: 28433, description: 'South Bend Clutch Throw-Out Bearing for 2001-2005 Duramax trucks. OEM-fit replacement part, part #HYDX-MAX.' },
+  { id: 'southbend-sdd3250-gk-org', sku: 'SDD3250-GK-ORG', name: '2005.5-2018 Cummins Stage 3 Organic Clutch Kit - 550HP', platformSlug: 'cummins', priceCents: 247775, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #SDD3250-GK-ORG.' },
+  { id: 'southbend-13125-ok-hd', sku: '13125-OK-HD', name: '1994-2004 Cummins HD Organic 13" Clutch Kit - 425HP', platformSlug: 'cummins', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 1994-2004 Cummins trucks. OEM-fit replacement part, part #13125-OK-HD.' },
+  { id: 'southbend-sdd3250-6', sku: 'SDD3250-6', name: '2000.5-2005.5 Cummins Stage Organic/Ceramic 4 Clutch Kit - 650HP', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #SDD3250-6.' },
+  { id: 'southbend-g56-ok-hd', sku: 'g56-ok-hd', name: '2005.5-2018 Cummins HD 13" Clutch Kit 425hp', platformSlug: 'cummins', priceCents: 199032, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #g56-ok-hd.' },
+  { id: 'southbend-13125-ofek', sku: '13125-OFEK', name: '1988-2004 Cummins 5.9L - HD 13" Clutch Kit 475hp', platformSlug: 'cummins', priceCents: 154352, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-OFEK.' },
+  { id: 'southbend-sdd3250-g-org', sku: 'SDD3250-G-ORG', name: '2005.5-2018 Cummins Organic Street Dual Disc Clutch Kit - 550hp', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #SDD3250-G-ORG.' },
+  { id: 'southbend-sdd3250-g', sku: 'SDD3250-G', name: '2005.5-2016 Cummins Stage 3 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2005.5-2016 Cummins trucks. OEM-fit replacement part, part #SDD3250-G.' },
+  { id: 'southbend-getragstarterspacer', sku: 'GETRAGSTARTERSPACER', name: '1988-1993 Cummins Getrag Starter Spacer', platformSlug: 'cummins', priceCents: 5836, description: 'South Bend Clutch Starter Spacer for 1988-1993 Cummins trucks. OEM-fit replacement part, part #GETRAGSTARTERSPACER.' },
+  { id: 'southbend-1947-okhd', sku: '1947-OKHD', name: '2000.5-2005.5 Cummins Stage 2 Organic Clutch Kit - 425HP', platformSlug: 'cummins', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #1947-OKHD.' },
+  { id: 'southbend-13125-ok', sku: '13125-OK', name: '1988-2004 Cummins 5.9L - Upgraded Clutch Kit W/ Flywheel', platformSlug: 'cummins', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-OK.' },
+  { id: 'southbend-1947-ok', sku: '1947-OK', name: '2000.5-2005.5 Cummins Stage 1 Organic Clutch -400HP', platformSlug: 'cummins', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #1947-OK.' },
+  { id: 'southbend-1944-6or-hd', sku: '1944-6OR-HD', name: '1999-2003.5 Powerstroke Stage 3 Organic Clutch - 425HP', platformSlug: 'powerstroke', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OR-HD.' },
+  { id: 'southbend-1944-6ofek', sku: '1944-6OFEK', name: '1999-2003.5 Powerstroke Stage 3 Feramic/Organic Clutch - 475HP', platformSlug: 'powerstroke', priceCents: 154352, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OFEK.' },
+  { id: 'southbend-sddmaxz-org', sku: 'SDDMAXZ-ORG', name: '2005-2006 Duramax Stage 3 Organic Clutch Kit', platformSlug: 'duramax', priceCents: 160632, description: 'South Bend Clutch Clutch Kit for 2005-2006 Duramax trucks. OEM-fit replacement part, part #SDDMAXZ-ORG.' },
+  { id: 'southbend-sdm506dfk', sku: 'SDM506DFK', name: '2005-2006 Duramax Stage 2 CB/Kevlar Clutch Kit', platformSlug: 'duramax', priceCents: 148362, description: 'South Bend Clutch Clutch Kit for 2005-2006 Duramax trucks. OEM-fit replacement part, part #SDM506DFK.' },
+  { id: 'southbend-sdd3250-5-org', sku: 'SDD3250-5-ORG', name: '1999-2000.5 Cummins NV5600 Stage 4 Organic Clutch Kit - 550HP', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1999-2000.5 Cummins trucks. OEM-fit replacement part, part #SDD3250-5-ORG.' },
+  { id: 'southbend-1947-ohd', sku: '1947-OHD', name: '2000.5-2005.5 Cummins Stage 2 Organic Clutch - 425HP', platformSlug: 'cummins', priceCents: 95108, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #1947-OHD.' },
+  { id: 'southbend-1950-60dfk', sku: '1950-60DFK', name: '2004-2007 Powerstroke Stage CB/Kevlar 2 Clutch Kit - 425HP', platformSlug: 'powerstroke', priceCents: 146229, description: 'South Bend Clutch Clutch Kit for 2004-2007 Powerstroke trucks. OEM-fit replacement part, part #1950-60DFK.' },
+  { id: 'southbend-1944-6or', sku: '1944-6OR', name: '1999-2003.5 Powerstroke Stage 1 Organic Clutch - 400HP', platformSlug: 'powerstroke', priceCents: 81238, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OR.' },
+  { id: 'southbend-1944-5ofek', sku: '1944-5OFEK', name: '1994-1998 Powerstroke Stage 3 Organic/Feramic Clutch Kit -475HP', platformSlug: 'powerstroke', priceCents: 154352, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OFEK.' },
+  { id: 'southbend-1939-df', sku: '1939-DF', name: '1999-2003.5 Powerstroke Stage 2 Ceramic/Kevlar Clutch - 425HP', platformSlug: 'powerstroke', priceCents: 101547, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1939-DF.' },
+  { id: 'southbend-sddmax-dfz', sku: 'SDDMAX-DFZ', name: '2005-2006 Duramax Stage 3 Organic Clutch Kit - 650HP', platformSlug: 'duramax', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2005-2006 Duramax trucks. OEM-fit replacement part, part #SDDMAX-DFZ.' },
+  { id: 'southbend-sdd3250-5k-org', sku: 'SDD3250-5K-ORG', name: '1994-2004 Cummins Stage 4 Organic Clutch Kit - 550HP', platformSlug: 'cummins', priceCents: 259961, description: 'South Bend Clutch Clutch Kit for 1994-2004 Cummins trucks. OEM-fit replacement part, part #SDD3250-5K-ORG.' },
+  { id: 'southbend-1670507-6', sku: '1670507-6', name: '2005-2016 Cummins Flywheel', platformSlug: 'cummins', priceCents: 66763, description: 'South Bend Clutch Flywheel for 2005-2016 Cummins trucks. OEM-fit replacement part, part #1670507-6.' },
+  { id: 'southbend-sfdd3250-6-4-org', sku: 'SFDD3250-6.4-ORG', name: '2008-2010 Powerstroke Stage 3 Organic Clutch Kit', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2008-2010 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-6.4-ORG.' },
+  { id: 'southbend-sfdd325060org', sku: 'SFDD325060ORG', name: '2004-2007 Powerstroke Stage Organic 3 Clutch Kit - 550HP', platformSlug: 'powerstroke', priceCents: 178034, description: 'South Bend Clutch Clutch Kit for 2004-2007 Powerstroke trucks. OEM-fit replacement part, part #SFDD325060ORG.' },
+  { id: 'southbend-sfdd3250-6-4', sku: 'SFDD3250-6.4', name: '2008-2010 Powerstroke Stage 3 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'powerstroke', priceCents: 178034, description: 'South Bend Clutch Clutch Kit for 2008-2010 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-6.4.' },
+  { id: 'southbend-g56-ofer', sku: 'G56-OFER', name: '2005.5-2018 Cummins Stage 2 Organic/Feramic Clutch Kit - 475HP', platformSlug: 'cummins', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #G56-OFER.' },
+  { id: 'southbend-1944-5k', sku: '1944-5K', name: '1994-1998 Powerstroke Stage 1 Organic Clutch Kit', platformSlug: 'powerstroke', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5K.' },
+  { id: 'southbend-1947-ofe', sku: '1947-OFE', name: '2000.5-2005 Cummins Stage 3 Organic/Feramic Clutch - 475HP', platformSlug: 'cummins', priceCents: 118885, description: 'South Bend Clutch Clutch Kit for 2000.5-2005 Cummins trucks. OEM-fit replacement part, part #1947-OFE.' },
+  { id: 'southbend-sfdd3250-5-org', sku: 'SFDD3250-5-ORG', name: '1994-1998 Powerstroke Stage 4 Organic Clutch Kit - 550HP', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-5-ORG.' },
+  { id: 'southbend-1939ohd', sku: '1939OHD', name: '1999-2003.5 Powerstroke Stage 2 Organic Clutch - 425HP', platformSlug: 'powerstroke', priceCents: 95240, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1939OHD.' },
+  { id: 'southbend-1947-o', sku: '1947-O', name: '2000.5-2005 Cummins Stage 1 Organic Clutch - 400HP', platformSlug: 'cummins', priceCents: 79257, description: 'South Bend Clutch Clutch Kit for 2000.5-2005 Cummins trucks. OEM-fit replacement part, part #1947-O.' },
+  { id: 'southbend-13125-or', sku: '13125-OR', name: '1988-2004 Cummins 13" Organic Clutch Kit - 400hp', platformSlug: 'cummins', priceCents: 81238, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-OR.' },
+  { id: 'southbend-sdd3250-5g', sku: 'SDD3250-5G', name: '1989-1993 Cummins Stage 4 Organic/Ceramic Clutch Kit - 650hp / 1300lbs', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1989-1993 Cummins trucks. OEM-fit replacement part, part #SDD3250-5G.' },
+  { id: 'southbend-sfdd3250-6-org', sku: 'SFDD3250-6-ORG', name: '1999-2003.5 Powerstroke Stage 4 Organic Clutch Kit - 550HP', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-6-ORG.' },
+  { id: 'southbend-sfdd3250-6-0', sku: 'SFDD3250-6.0', name: '2004-2007 Powerstroke Stage 3 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2004-2007 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-6.0.' },
+  { id: 'southbend-sfdd3250-5', sku: 'SFDD3250-5', name: '1994-1998 Powerstroke Stage 4 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-5.' },
+  { id: 'southbend-1950-64ok-hd', sku: '1950-64OK-HD', name: '2008-2010 Powerstroke Stage 1 Organic Clutch Kit - 425HP', platformSlug: 'powerstroke', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 2008-2010 Powerstroke trucks. OEM-fit replacement part, part #1950-64OK-HD.' },
+  { id: 'southbend-1950-64cbk', sku: '1950-64CBK', name: '2008-2010 Powerstroke Stage 2 Ceramic Clutch Kit - 450HP', platformSlug: 'powerstroke', priceCents: 146229, description: 'South Bend Clutch Clutch Kit for 2008-2010 Powerstroke trucks. OEM-fit replacement part, part #1950-64CBK.' },
+  { id: 'southbend-1950-60cbk', sku: '1950-60CBK', name: '2004-2007 Powerstroke Stage 2 Ceramic Clutch Kit - 450HP', platformSlug: 'powerstroke', priceCents: 146229, description: 'South Bend Clutch Clutch Kit for 2004-2007 Powerstroke trucks. OEM-fit replacement part, part #1950-60CBK.' },
+  { id: 'southbend-1944-5or-hd', sku: '1944-5OR-HD', name: '1993-1998 Powerstroke Stage 2 Organic Clutch - 425HP', platformSlug: 'powerstroke', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 1993-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OR-HD.' },
+  { id: 'southbend-1939-cb', sku: '1939-CB', name: '1999-2003.5 Powerstroke Stage 2 Ceramic Clutch - 450HP', platformSlug: 'powerstroke', priceCents: 101547, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1939-CB.' },
+  { id: 'southbend-10701066-2', sku: '10701066-2', name: '2005-2006 Duramax Flywheel', platformSlug: 'duramax', priceCents: 89017, description: 'South Bend Clutch Flywheel for 2005-2006 Duramax trucks. OEM-fit replacement part, part #10701066-2.' },
+  { id: 'southbend-1670104-6', sku: '1670104-6', name: '2000.5-2005 Cummins Flywheel', platformSlug: 'cummins', priceCents: 66763, description: 'South Bend Clutch Flywheel for 2000.5-2005 Cummins trucks. OEM-fit replacement part, part #1670104-6.' },
+  { id: 'southbend-13125-ofer', sku: '13125-OFER', name: '1988-2004 Cummins Stage 3 Organic/Feramic Clutch - 475HP', platformSlug: 'cummins', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-OFER.' },
+  { id: 'southbend-13125-fer', sku: '13125-fer', name: '1988-2004 Cummins Stage 3 Feramic Clutch - 550HP-No Flywheel', platformSlug: 'cummins', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-fer.' },
+  { id: 'southbend-1947-or-hd', sku: '1947-OR-HD', name: '2000-2005 Cummins 5.9L South Bend Stage 2 Daily Plus Clutch Kit', platformSlug: 'cummins', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 2000-2005 Cummins trucks. OEM-fit replacement part, part #1947-OR-HD.' },
+  { id: 'southbend-fc-6okhd', sku: 'FC-6OKHD', name: '1999-2003 Powerstroke Clutch Kit', platformSlug: 'powerstroke', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 1999-2003 Powerstroke trucks. OEM-fit replacement part, part #FC-6OKHD.' },
+  { id: 'southbend-1947-ofer', sku: '1947-OFER', name: '2000.5-2005.5 Cummins Dyna Max Clutch Kit', platformSlug: 'cummins', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #1947-OFER.' },
+  { id: 'southbend-1944-6r', sku: '1944-6R', name: '1999-2003.5 Powerstroke Stage 1 Organic Clutch', platformSlug: 'powerstroke', priceCents: 64990, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6R.' },
+  { id: 'southbend-1944-6ofer', sku: '1944-6OFER', name: '1999-2003.5 Powerstroke Stage 3 Organic/Feramic Clutch -475HP', platformSlug: 'powerstroke', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OFER.' },
+  { id: 'southbend-1944-5or', sku: '1944-5OR', name: '1993-1998 Powerstroke Stage 2 Organic Clutch - 400HP', platformSlug: 'powerstroke', priceCents: 81238, description: 'South Bend Clutch Clutch Kit for 1993-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OR.' },
+  { id: 'southbend-1944-5ofer', sku: '1944-5OFER', name: '1994-1998 Powerstroke Stage 3 Organic/Feramic Clutch - 475HP', platformSlug: 'powerstroke', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OFER.' },
+  { id: 'southbend-10701066-1', sku: '10701066-1', name: '2001-2005 Duramax 6.6L Flywheel', platformSlug: 'duramax', priceCents: 89017, description: 'South Bend Clutch Flywheel for 2001-2005 Duramax trucks. OEM-fit replacement part, part #10701066-1.' },
+  { id: 'southbend-sdm0506ok', sku: 'SDM0506OK', name: '2005-2006 Duramax Stage 1 Organic Clutch Kit - 375HP', platformSlug: 'duramax', priceCents: 146229, description: 'South Bend Clutch Clutch Kit for 2005-2006 Duramax trucks. OEM-fit replacement part, part #SDM0506OK.' },
+  { id: 'southbend-hydx-f6-0-6-4', sku: 'HYDX-F6.0-6.4', name: '2004-2010 Powerstroke Slave Master Cylinder', platformSlug: 'powerstroke', priceCents: 34932, description: 'South Bend Clutch Clutch Master Cylinder for 2004-2010 Powerstroke trucks. OEM-fit replacement part, part #HYDX-F6.0-6.4.' },
+  { id: 'southbend-hydx-f67-3', sku: 'HYDX-F67.3', name: '1999-2003.5 Powerstroke Slave Master Cylinder', platformSlug: 'powerstroke', priceCents: 34932, description: 'South Bend Clutch Clutch Master Cylinder for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #HYDX-F67.3.' },
+  { id: 'southbend-1947-ofek', sku: '1947-OFEK', name: '2000.5-2005 Cummins Stage 3 Organic/Feramic Clutch Kit - 475HP', platformSlug: 'cummins', priceCents: 154352, description: 'South Bend Clutch Clutch Kit for 2000.5-2005 Cummins trucks. OEM-fit replacement part, part #1947-OFEK.' },
+  { id: 'southbend-1944-5ok', sku: '1944-5OK', name: '1994-1998 Powerstroke Stage 2 Organic Clutch Kit - 400HP', platformSlug: 'powerstroke', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OK.' },
+  { id: 'southbend-1944-6ok-hd', sku: '1944-6OK-HD', name: '1999-2003.5 Powerstroke Stage 3 Organic Clutch Kit - 425HP', platformSlug: 'powerstroke', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OK-HD.' },
+  { id: 'southbend-1944-6ok', sku: '1944-6OK', name: '1999-2003.5 Powerstroke Stage 1 Organic Clutch Kit - 400HP', platformSlug: 'powerstroke', priceCents: 121857, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6OK.' },
+  { id: 'southbend-sdd3250-6-org', sku: 'SDD3250-6-ORG', name: '2000.5-2005.5 Cummins Stage 4 Organic Clutch Kit - 550HP', platformSlug: 'cummins', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2000.5-2005.5 Cummins trucks. OEM-fit replacement part, part #SDD3250-6-ORG.' },
+  { id: 'southbend-g56-or-hd', sku: 'G56-OR-HD', name: '2005.5-2018 Cummins Stage 1 Organic Clutch - 425HP', platformSlug: 'cummins', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 2005.5-2018 Cummins trucks. OEM-fit replacement part, part #G56-OR-HD.' },
+  { id: 'southbend-sddmax-dfy', sku: 'SDDMAX-DFY', name: '2001-2006 Duramax Stage 3 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'duramax', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2001-2006 Duramax trucks. OEM-fit replacement part, part #SDDMAX-DFY.' },
+  { id: 'southbend-hyd-hd', sku: 'HYD-HD', name: '1994-1997 Cummins Clutch Master Cylinder', platformSlug: 'cummins', priceCents: 52805, description: 'South Bend Clutch Clutch Master Cylinder for 1994-1997 Cummins trucks. OEM-fit replacement part, part #HYD-HD.' },
+  { id: 'southbend-isk1-375', sku: 'ISK1.375', name: '1994-2005 Cummins NV4500 Upgraded Input Shaft', platformSlug: 'cummins', priceCents: 64990, description: 'South Bend Clutch Drivetrain Component for 1994-2005 Cummins trucks. OEM-fit replacement part, part #ISK1.375.' },
+  { id: 'southbend-1944-6k', sku: '1944-6K', name: '1999-2003.5 Powerstroke OEM Clutch', platformSlug: 'powerstroke', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #1944-6K.' },
+  { id: 'southbend-sddmaxy-org', sku: 'SDDMAXY-ORG', name: '2001-2005 Duramax Stage 3 Organic Clutch Kit - 550HP', platformSlug: 'duramax', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 2001-2005 Duramax trucks. OEM-fit replacement part, part #SDDMAXY-ORG.' },
+  { id: 'southbend-1944-5ok-hd', sku: '1944-5OK-HD', name: '1994-1998 Powerstroke Stage 2 Organic Clutch Kit - 425HP', platformSlug: 'powerstroke', priceCents: 138104, description: 'South Bend Clutch Clutch Kit for 1994-1998 Powerstroke trucks. OEM-fit replacement part, part #1944-5OK-HD.' },
+  { id: 'southbend-sfdd3250-6', sku: 'SFDD3250-6', name: '1999-2003.5 Powerstroke Stage 4 Organic/Ceramic Clutch Kit - 650HP', platformSlug: 'powerstroke', priceCents: 194970, description: 'South Bend Clutch Clutch Kit for 1999-2003.5 Powerstroke trucks. OEM-fit replacement part, part #SFDD3250-6.' },
+  { id: 'southbend-13125-or-hd', sku: '13125-OR-HD', name: '1988-2004 Cummins Stage 2 Organic Clutch - 425HP', platformSlug: 'cummins', priceCents: 97485, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-OR-HD.' },
+  { id: 'southbend-13125-fek', sku: '13125-fek', name: '1988-2004 Cummins Stage 3 Feramic Clutch Kit - 550HP', platformSlug: 'cummins', priceCents: 170599, description: 'South Bend Clutch Clutch Kit for 1988-2004 Cummins trucks. OEM-fit replacement part, part #13125-fek.' },
+  { id: 'southbend-0090', sku: '0090', name: '1994-2005 Cummins 5.9L - Stock Replacement Clutch', platformSlug: 'cummins', priceCents: 67368, description: 'South Bend Clutch Clutch Kit for 1994-2005 Cummins trucks. OEM-fit replacement part, part #0090.' },
+];
+
+export function seedSouthBendProducts() {
+  db.prepare(`
+    INSERT OR IGNORE INTO categories (slug, name, blurb, icon)
+    VALUES ('drivetrain', 'Clutches & Drivetrain', 'Clutch kits, master cylinders, flywheels, and drivetrain hardware', 'clutch')
+  `).run();
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO products
+      (id, sku, name, brand, category_slug, platform_slug, price_cents, description, weight_lbs, supplier, active, stock_qty)
+    VALUES
+      (@id, @sku, @name, 'South Bend Clutch', 'drivetrain', @platformSlug, @priceCents, @description, NULL, 'South Bend Clutch', 1, 3)
+  `);
+  const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'South Bend Clutch'`);
+
+  let inserted = 0;
+  for (const p of SOUTH_BEND_PRODUCTS) {
+    try {
+      const info = insert.run(p);
+      if (info.changes > 0) inserted++;
+    } catch (err) {
+      console.error('[seedSouthBendProducts] insert failed for', p.id, '-', err.message);
+    }
+    try {
+      updateName.run({ id: p.id, name: p.name });
+    } catch (err) {
+      console.error('[seedSouthBendProducts] update failed for', p.id, '-', err.message);
+    }
+  }
+
+  const sbCount = db.prepare(`SELECT COUNT(*) AS c FROM products WHERE brand = 'South Bend Clutch'`).get().c;
+  console.log(`[seedSouthBendProducts] inserted ${inserted}/${SOUTH_BEND_PRODUCTS.length} new rows this run; ${sbCount} South Bend Clutch rows total in DB now.`);
+}
+
 migrate();
 seedFassProducts();
 seedDccTurbos();
 seedP1rp();
 seedP1rpImages();
 seedNoLimitProducts();
+seedSouthBendProducts();
+
+if (process.argv.includes('--migrate')) {
+  console.log('Migration applied to', DB_PATH);
+}
