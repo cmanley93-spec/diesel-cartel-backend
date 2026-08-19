@@ -696,12 +696,192 @@ export function seedFassProducts() {
   }
 }
 
+// ============================================================
+// No Limit Fabrication — proprietary/in-house products only.
+// No Limit's site also resells third-party brands (BD Diesel,
+// H&S Motorsports, Fleece Performance, Exergy, Kryptonite, Axiom
+// Supply, ICON, Garrett, etc.) across all three platform pages —
+// those are intentionally excluded here per Cody's direction to add
+// only what's actually manufactured by No Limit themselves.
+// Compiled from nolimitfabrication.com's own category pages
+// (turbo kits, cold air intakes, intercooler & piping, engine &
+// accessories, suspension). Their proprietary lineup turned out to
+// be almost entirely Ford Power Stroke — only one Duramax item
+// (a drop-in LLY-LMM turbo) and nothing proprietary for Cummins;
+// Cummins/Duramax platform pages on their site are 100% resold
+// third-party brands. A couple of universal-fit accessories
+// (silicone couplers, catch can parts) use platformSlug 'universal'
+// like the DCC turbo batch above. Prices are No Limit's own listed
+// USD retail pricing (not yet converted/marked up for CAD — same
+// caveat as noted elsewhere pending a markup pass). weight_lbs left
+// NULL (not collected this pass) — checkout.js falls back to a
+// per-category shipping estimate until real weights are entered.
+// image_url intentionally left unset here — product photos are a
+// separate follow-up pass (same two-step approach as P1RP: products
+// first, then a dedicated image-matching batch), since No Limit's
+// site images need the same per-product sourcing check P1RP got
+// rather than being bulk-pulled from category grid thumbnails.
+// Same INSERT OR IGNORE safety as every other batch above: only
+// adds missing rows, never overwrites a price/stock/active edit
+// made in Admin -> Products on a later deploy.
+// ============================================================
+const NO_LIMIT_TURBO_PRODUCTS = [
+  { id: 'nolimit-whistler-1519', sku: 'NLWVGT1519', name: '2015-2019 6.7 Powerstroke Whistler VGT Drop-In Turbo', platformSlug: 'powerstroke', priceCents: 284900, description: 'No Limit Fabrication Whistler VGT drop-in turbocharger for 2015-2019 6.7L Ford Power Stroke. Direct bolt-in replacement for the factory variable geometry turbo.' },
+  { id: 'nolimit-whistler-1114', sku: 'NLWVGT1114', name: '2011-2014 6.7 Powerstroke Whistler VGT Drop-In Turbo', platformSlug: 'powerstroke', priceCents: 274900, description: 'No Limit Fabrication Whistler VGT drop-in turbocharger for 2011-2014 6.7L Ford Power Stroke. Direct bolt-in replacement for the factory variable geometry turbo.' },
+  { id: 'nolimit-67-compound', sku: 'NLCOMP6726', name: '2011-2026 6.7 Powerstroke Compound Turbo Kit', platformSlug: 'powerstroke', priceCents: 339900, description: 'No Limit Fabrication compound turbo kit for 2011-2026 6.7L Ford Power Stroke, adding an atmosphere-stage turbo ahead of the charge-air turbo for increased airflow.' },
+  { id: 'nolimit-whistler-0307', sku: 'NLWVGT0307', name: '2003-2007 6.0 Powerstroke Whistler VGT Drop-In Turbo', platformSlug: 'powerstroke', priceCents: 154900, description: 'No Limit Fabrication Whistler VGT drop-in turbocharger for 2003-2007 6.0L Ford Power Stroke. Direct bolt-in replacement for the factory variable geometry turbo.' },
+  { id: 'nolimit-retrofit-1114', sku: 'NLRETRO1114', name: '2011-2014 6.7 Powerstroke Retrofit Kit for 2015+ Style Turbo', platformSlug: 'powerstroke', priceCents: 144900, description: 'No Limit Fabrication retrofit kit that allows a 2015+ style 6.7L Power Stroke turbo to be installed on 2011-2014 trucks.' },
+  { id: 'nolimit-duramax-llylmm-turbo', sku: 'NLDMAXLLYLMM', name: 'Drop-In Factory Replacement Turbo — LLY-LMM 6.6L Duramax', platformSlug: 'duramax', priceCents: 209900, description: 'No Limit Fabrication drop-in factory replacement turbocharger for LLY through LMM generation 6.6L GM Duramax engines.' },
+  { id: 'nolimit-turbo-blanket', sku: 'NLTBLANKET', name: 'No Limit Fabrication Turbo Blanket', platformSlug: 'universal', priceCents: 12900, description: 'Heat-resistant turbo blanket to reduce underhood temperatures and improve exhaust gas velocity. Universal fit.' },
+  { id: 'nolimit-67-ballbearing', sku: 'NLBB67PS', name: '6.7 Powerstroke Drop-In Precision Ball Bearing Turbo Kit', platformSlug: 'powerstroke', priceCents: 449900, description: 'No Limit Fabrication drop-in precision ball bearing turbo kit for 6.7L Ford Power Stroke, for quicker spool response versus the factory journal-bearing unit.' },
+];
+
+const NO_LIMIT_INTAKE_PRODUCTS = [
+  { id: 'nolimit-intake-2026', sku: 'NLCAI2026', name: '2020-2026 6.7 Powerstroke Cold Air Intake', platformSlug: 'powerstroke', priceCents: 34900, description: 'No Limit Fabrication cold air intake for 2020-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-1719-s2', sku: 'NLCAI1719S2', name: '2017-2019 6.7 Powerstroke Cold Air Intake Stage 2', platformSlug: 'powerstroke', priceCents: 34900, description: 'No Limit Fabrication Stage 2 cold air intake for 2017-2019 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-1116-s2', sku: 'NLCAI1116S2', name: '2011-2016 6.7 Powerstroke Cold Air Intake Stage 2', platformSlug: 'powerstroke', priceCents: 34900, description: 'No Limit Fabrication Stage 2 cold air intake for 2011-2016 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-1116-s1', sku: 'NLCAI1116S1', name: '2011-2016 6.7 Powerstroke Cold Air Intake Stage 1', platformSlug: 'powerstroke', priceCents: 32900, description: 'No Limit Fabrication Stage 1 cold air intake for 2011-2016 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-1719-s1', sku: 'NLCAI1719S1', name: '2017-2019 6.7 Powerstroke Cold Air Intake Stage 1', platformSlug: 'powerstroke', priceCents: 34900, description: 'No Limit Fabrication Stage 1 cold air intake for 2017-2019 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-0810', sku: 'NLCAI0810', name: '2008-2010 6.4 Powerstroke Cold Air Intake', platformSlug: 'powerstroke', priceCents: 34900, description: 'No Limit Fabrication cold air intake for 2008-2010 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-intake-60', sku: 'NLCAI60', name: '6.0 Powerstroke Cold Air Intake', platformSlug: 'powerstroke', priceCents: 37900, description: 'No Limit Fabrication cold air intake for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-intake-closedbox-1719', sku: 'NLCAICB1719', name: '2017-2019 Ford Powerstroke Premium Closed Box Intake', platformSlug: 'powerstroke', priceCents: 49900, description: 'No Limit Fabrication premium closed-box cold air intake for 2017-2019 Ford Power Stroke.' },
+  { id: 'nolimit-intake-premium-1116', sku: 'NLCAIPREM1116', name: '2011-2016 6.7 Powerstroke Premium Cold Air Intake', platformSlug: 'powerstroke', priceCents: 49900, description: 'No Limit Fabrication premium cold air intake for 2011-2016 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-intake-30', sku: 'NLCAI30', name: '3.0 Powerstroke Cold Air Intake', platformSlug: 'powerstroke', priceCents: 37905, description: 'No Limit Fabrication cold air intake for the 3.0L Ford Power Stroke.' },
+  { id: 'nolimit-custom-filter', sku: 'NLCAIFILTER', name: 'No Limit Fabrication Custom Air Filter', platformSlug: 'universal', priceCents: 9500, description: 'Replacement custom air filter sized for No Limit Fabrication cold air intake systems.' },
+  { id: 'nolimit-prefilter', sku: 'NLPREFILTER', name: 'No Limit Fabrication Pre Filter', platformSlug: 'universal', priceCents: 4999, description: 'Pre-filter sock to extend service life of a No Limit Fabrication cold air intake filter in dusty conditions.' },
+];
+
+const NO_LIMIT_COOLING_PRODUCTS = [
+  { id: 'nolimit-boost-bundle-67', sku: 'NLBB67', name: '6.7 Powerstroke Boost Bundle Kit', platformSlug: 'powerstroke', priceCents: 48840, description: 'No Limit Fabrication boost bundle kit for 6.7L Ford Power Stroke, bundling hot side and cold side piping upgrades.' },
+  { id: 'nolimit-hf-bundle-67', sku: 'NLHFB67', name: '6.7 Powerstroke High Flow Bundle Kit', platformSlug: 'powerstroke', priceCents: 77900, description: 'No Limit Fabrication high flow intercooler piping bundle kit for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-hf-bundle-64', sku: 'NLHFB64', name: '6.4 Powerstroke High Flow Bundle Kit', platformSlug: 'powerstroke', priceCents: 98910, description: 'No Limit Fabrication high flow intercooler piping bundle kit for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-hf-bundle-60', sku: 'NLHFB60', name: '6.0 Powerstroke High Flow Bundle Kit', platformSlug: 'powerstroke', priceCents: 92610, description: 'No Limit Fabrication high flow intercooler piping bundle kit for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-ic-piping-67', sku: 'NLICPIPE67', name: '6.7 Powerstroke Intercooler Piping Kit', platformSlug: 'powerstroke', priceCents: 149900, description: 'No Limit Fabrication full intercooler piping kit for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-a2w-stage2-67', sku: 'NLA2WS267', name: '6.7 Powerstroke Stage 2 Performance Air To Water Intercooler', platformSlug: 'powerstroke', priceCents: 124900, description: 'No Limit Fabrication Stage 2 performance air-to-water intercooler for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-a2w-stage1-67', sku: 'NLA2WS167', name: '6.7 Powerstroke Stage 1 Factory Replacement Air To Water Intercooler', platformSlug: 'powerstroke', priceCents: 69900, description: 'No Limit Fabrication Stage 1 factory-replacement air-to-water intercooler for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-hotside-67', sku: 'NLHSPIPE67', name: '2011-2026 6.7 Powerstroke Hot Side Pipe Kit', platformSlug: 'powerstroke', priceCents: 23900, description: 'No Limit Fabrication hot side intercooler pipe kit for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-coldside-67', sku: 'NLCSPIPE67', name: '2011+ 6.7 Powerstroke Cold Side Intercooler Pipe Kit', platformSlug: 'powerstroke', priceCents: 28900, description: 'No Limit Fabrication cold side intercooler pipe kit for 2011+ 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-coldside-60', sku: 'NLCSKIT60', name: '6.0 Powerstroke Coldside Kit', platformSlug: 'powerstroke', priceCents: 35000, description: 'No Limit Fabrication cold side intercooler piping kit for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-hotside-60', sku: 'NLHSPIPE60', name: '6.0 Powerstroke Hotside Pipe', platformSlug: 'powerstroke', priceCents: 30000, description: 'No Limit Fabrication hot side intercooler pipe for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-hotpipe-64', sku: 'NLHOTPIPE64', name: '6.4 Powerstroke Hot Pipe', platformSlug: 'powerstroke', priceCents: 40000, description: 'No Limit Fabrication hot side intercooler pipe for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-coldside-64', sku: 'NLCSKIT64', name: '2008-2010 6.4 Powerstroke Coldside Kit', platformSlug: 'powerstroke', priceCents: 40000, description: 'No Limit Fabrication cold side intercooler piping kit for 2008-2010 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-downpipe-1114', sku: 'NLDP1114', name: '2011-2014 6.7 Powerstroke 4" Stainless Steel Downpipe', platformSlug: 'powerstroke', priceCents: 24900, description: 'No Limit Fabrication 4-inch stainless steel downpipe for 2011-2014 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-downpipe-1519', sku: 'NLDP1519', name: '2015-2019 6.7 Powerstroke 4" Stainless Steel Downpipe', platformSlug: 'powerstroke', priceCents: 24900, description: 'No Limit Fabrication 4-inch stainless steel downpipe for 2015-2019 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-downpipe-2022', sku: 'NLDP2022', name: '2020-2022 6.7 Powerstroke 4" Stainless Steel Downpipe', platformSlug: 'powerstroke', priceCents: 24900, description: 'No Limit Fabrication 4-inch stainless steel downpipe for 2020-2022 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-icbootset-60', sku: 'NLICBOOT60', name: '6.0 Powerstroke Complete Intercooler Boot Set', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication complete intercooler boot set for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-icbootset-64', sku: 'NLICBOOT64', name: '6.4 Powerstroke Complete Intercooler Boot Set', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication complete intercooler boot set for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-a2a-60', sku: 'NLA2A60', name: '6.0 Powerstroke Air To Air Intercooler', platformSlug: 'powerstroke', priceCents: 134900, description: 'No Limit Fabrication air-to-air intercooler for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-a2a-64', sku: 'NLA2A64', name: '6.4 Powerstroke Air To Air Intercooler', platformSlug: 'powerstroke', priceCents: 134900, description: 'No Limit Fabrication air-to-air intercooler for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-a2a-73', sku: 'NLA2A73', name: '1999-2003 7.3 Powerstroke Air To Air Intercooler', platformSlug: 'powerstroke', priceCents: 134900, description: 'No Limit Fabrication air-to-air intercooler for 1999-2003 7.3L Ford Power Stroke.' },
+  { id: 'nolimit-lower-ic-hose', sku: 'NLLOWERICHOSE', name: '6.0/6.4 Powerstroke Lower Intercooler Hose', platformSlug: 'powerstroke', priceCents: 4900, description: 'No Limit Fabrication lower intercooler hose for 6.0L/6.4L Ford Power Stroke.' },
+  { id: 'nolimit-sil-hose-2x3', sku: 'NLSILHOSE23', name: '2" ID x 3" Long Silicone Hose', platformSlug: 'universal', priceCents: 2900, description: 'Universal 2-inch ID x 3-inch long silicone coupler hose.' },
+  { id: 'nolimit-sil-elbow-390', sku: 'NLSILELBOW390', name: '3" ID 90° Silicone Elbow', platformSlug: 'universal', priceCents: 3900, description: 'Universal 3-inch ID 90-degree silicone elbow.' },
+  { id: 'nolimit-sil-red-335', sku: 'NLSILRED335', name: '3" ID To 3.5" ID x 6" Long Silicone Reducer', platformSlug: 'universal', priceCents: 4900, description: 'Universal 3-inch to 3.5-inch ID x 6-inch long silicone reducer coupler.' },
+  { id: 'nolimit-sil-coupler-3x4', sku: 'NLSILCPL34', name: '3" ID x 4" Long 6-Ply Silicone Coupler', platformSlug: 'universal', priceCents: 2900, description: 'Universal 3-inch ID x 4-inch long 6-ply silicone coupler.' },
+  { id: 'nolimit-sil-coupler-3x6', sku: 'NLSILCPL36', name: '3" ID x 6" Long 2-Hump Silicone Coupler with SS Rings', platformSlug: 'universal', priceCents: 4900, description: 'Universal 3-inch ID x 6-inch long 2-hump silicone coupler with stainless steel support rings.' },
+  { id: 'nolimit-sil-coupler-3258', sku: 'NLSILCPL3258', name: '3" To 2-5/8" 90° Silicone Coupler', platformSlug: 'universal', priceCents: 3900, description: 'Universal 3-inch to 2-5/8-inch 90-degree silicone coupler.' },
+  { id: 'nolimit-hotside-boot-60', sku: 'NLHSBOOT60', name: '6.0 Powerstroke Hot Side Turbo Connection Boot', platformSlug: 'powerstroke', priceCents: 3900, description: 'No Limit Fabrication hot side turbo connection boot for 6.0L Ford Power Stroke.' },
+];
+
+const NO_LIMIT_ENGINE_PRODUCTS = [
+  { id: 'nolimit-turbo-circ-line-23', sku: 'NLTCIRC23', name: '2023+ 6.7 Powerstroke High Output Turbo Circulation Line Kit', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication turbo circulation line kit for 2023+ high output 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-coolant-line-1126', sku: 'NLCOOLLINE1126', name: '2011-2026 6.7 Powerstroke Coolant Line Kit', platformSlug: 'powerstroke', priceCents: 15900, description: 'No Limit Fabrication coolant line kit for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-6r140-pan', sku: 'NL6R140PAN', name: 'No Limit Fabrication Billet 6R140 Transmission Pan', platformSlug: 'powerstroke', priceCents: 69900, description: 'Billet aluminum 6R140 transmission pan for added fluid capacity and cooling on Ford Power Stroke trucks.' },
+  { id: 'nolimit-oilpan-67', sku: 'NLOILPAN67', name: '2011-2026 6.7 Powerstroke High Capacity Billet Oil Pan', platformSlug: 'powerstroke', priceCents: 59900, description: 'No Limit Fabrication high capacity billet oil pan for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-catch-can', sku: 'NLCATCHCAN', name: 'No Limit Fabrication Catch Can', platformSlug: 'universal', priceCents: 29900, description: 'Billet oil catch can to trap crankcase oil vapor before it reaches the intake system. Universal mount.' },
+  { id: 'nolimit-venturi', sku: 'NLVENTURI', name: 'No Limit Fabrication Universal Venturi', platformSlug: 'universal', priceCents: 12900, description: 'Universal venturi fitting for catch can and crankcase ventilation setups.' },
+  { id: 'nolimit-diffcover-14bolt', sku: 'NLDIFF14BOLT', name: 'Ford SuperDuty Billet Differential Cover — 14 Bolt', platformSlug: 'powerstroke', priceCents: 59900, description: 'No Limit Fabrication billet rear differential cover for Ford Super Duty 14-bolt axles.' },
+  { id: 'nolimit-sec-coolant-tank-67', sku: 'NLSECTANK67', name: '2011-2026 6.7 Powerstroke Secondary Coolant Tank', platformSlug: 'powerstroke', priceCents: 44900, description: 'No Limit Fabrication secondary coolant tank for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-cp4-bypass', sku: 'NLCP4BYPASS', name: '2011-2024 6.7 Powerstroke CP4 Disaster Prevention Bypass Kit', platformSlug: 'powerstroke', priceCents: 32900, description: 'No Limit Fabrication CP4 fuel pump failure bypass kit for 2011-2024 6.7L Ford Power Stroke, intended to help protect the fuel system if the CP4 pump fails.' },
+  { id: 'nolimit-primary-coolant-tank-67', sku: 'NLPRIMTANK67', name: '2011-2026 6.7 Powerstroke Aluminum Primary Coolant Tank', platformSlug: 'powerstroke', priceCents: 64900, description: 'No Limit Fabrication aluminum primary coolant tank for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-uppercoolant-1126', sku: 'NLUPCOOL1126', name: '2011-Current 6.7 Powerstroke Upper Coolant Hose Upgrade Kit', platformSlug: 'powerstroke', priceCents: 44900, description: 'No Limit Fabrication upper coolant hose upgrade kit for 2011-current 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-uppercoolant-60', sku: 'NLUPCOOL60', name: '6.0 Powerstroke Upper Coolant Hose Upgrade Kit', platformSlug: 'powerstroke', priceCents: 24900, description: 'No Limit Fabrication upper coolant hose upgrade kit for 6.0L Ford Power Stroke.' },
+  { id: 'nolimit-uppipe-64', sku: 'NLUPPIPE64HD', name: '6.4 Powerstroke HD Up-Pipe Kit', platformSlug: 'powerstroke', priceCents: 39900, description: 'No Limit Fabrication heavy-duty up-pipe kit for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-coolanttank-64', sku: 'NLCOOLTANK64', name: '6.4 Powerstroke Aluminum Coolant Tank', platformSlug: 'powerstroke', priceCents: 64900, description: 'No Limit Fabrication aluminum coolant tank for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-pass-coolant-fix-64', sku: 'NLPASSCOOL64', name: '6.4 Powerstroke Passenger Coolant Line Fix', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication passenger side coolant line fix kit for 6.4L Ford Power Stroke.' },
+  { id: 'nolimit-oilcooler-reloc-67', sku: 'NLOILCOOLRELOC67', name: '6.7 Powerstroke Oil Cooler Relocation Kit', platformSlug: 'powerstroke', priceCents: 99900, description: 'No Limit Fabrication oil cooler relocation kit for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-battreloc-1719', sku: 'NLBATRELOC1719', name: '2017-2019 6.7 Powerstroke Passenger Side Battery Relocation Kit', platformSlug: 'powerstroke', priceCents: 29900, description: 'No Limit Fabrication passenger side battery relocation kit for 2017-2019 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-capset-67', sku: 'NLCAPSET67', name: '6.7 Powerstroke Cap Set', platformSlug: 'powerstroke', priceCents: 22900, description: 'No Limit Fabrication coolant/oil cap set for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-turbohoseboot-67', sku: 'NLTURBOBOOT67', name: '6.7 Powerstroke Turbo Hose Boot', platformSlug: 'powerstroke', priceCents: 7900, description: 'No Limit Fabrication turbo hose boot for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-batteryholddowns', sku: 'NLBATHOLDDOWN', name: 'No Limit Fabrication Battery Hold Downs', platformSlug: 'universal', priceCents: 22900, description: 'Billet battery hold-down set. Universal fit.' },
+  { id: 'nolimit-hotside-boot-kit-1126', sku: 'NLHSBOOTKIT1126', name: '2011-2026 6.7 Powerstroke Complete Hot Side Boot Kit', platformSlug: 'powerstroke', priceCents: 12900, description: 'No Limit Fabrication complete hot side boot kit for 2011-2026 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-deftankplate', sku: 'NLDEFPLATE', name: 'No Limit Fabrication DEF Tank Plate', platformSlug: 'powerstroke', priceCents: 7900, description: 'No Limit Fabrication DEF tank skid plate for Ford Power Stroke trucks.' },
+  { id: 'nolimit-10r140-pan', sku: 'NL10R140PAN', name: '2020-Current 6.7 Powerstroke Billet 10R140 Transmission Pan', platformSlug: 'powerstroke', priceCents: 99900, description: 'No Limit Fabrication billet 10R140 transmission pan for 2020-current 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-diffcover-12bolt-9916', sku: 'NLDIFF12BOLT9916', name: 'Ford SuperDuty Billet Differential Cover — 12 Bolt (1999-2016)', platformSlug: 'powerstroke', priceCents: 59900, description: 'No Limit Fabrication billet rear differential cover for 1999-2016 Ford Super Duty 12-bolt axles.' },
+  { id: 'nolimit-diffcover-12bolt-99cur', sku: 'NLDIFF12BOLT99CUR', name: 'Ford SuperDuty Billet Differential Cover — 12 Bolt (1999-Current)', platformSlug: 'powerstroke', priceCents: 59900, description: 'No Limit Fabrication billet rear differential cover for 1999-current Ford Super Duty 12-bolt axles.' },
+  { id: 'nolimit-reservoircap-67', sku: 'NLRESCAP67', name: 'High Performance 6.7 Powerstroke Secondary Reservoir Cap', platformSlug: 'powerstroke', priceCents: 3999, description: 'No Limit Fabrication high performance secondary coolant reservoir cap for 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-rotaryswitch-1122', sku: 'NLROTARYSW1122', name: '2011-2022 Rotary Switch Bracket', platformSlug: 'powerstroke', priceCents: 3999, description: 'No Limit Fabrication rotary switch mounting bracket for 2011-2022 Ford Power Stroke trucks.' },
+  { id: 'nolimit-fuelsump', sku: 'NLFUELSUMP', name: 'No Limit Fabrication Universal Fuel Sump', platformSlug: 'universal', priceCents: 18900, description: 'Universal fuel sump kit for auxiliary lift pump plumbing.' },
+  { id: 'nolimit-sec-coolant-line-1114', sku: 'NLSECLINE1114', name: '2011-2014 6.7 Powerstroke Secondary Coolant Line', platformSlug: 'powerstroke', priceCents: 7900, description: 'No Limit Fabrication secondary coolant line for 2011-2014 6.7L Ford Power Stroke.' },
+  { id: 'nolimit-molded-hose-67', sku: 'NLMOLDEDHOSE67', name: '6.7 Powerstroke Molded Hose', platformSlug: 'powerstroke', priceCents: 7900, description: 'No Limit Fabrication molded coolant hose for 6.7L Ford Power Stroke.' },
+];
+
+const NO_LIMIT_SUSPENSION_PRODUCTS = [
+  { id: 'nolimit-reverse-level-kit', sku: 'NLREVLEVEL', name: 'No Limit Fabrication Ford Super Duty Reverse Level Kit', platformSlug: 'powerstroke', priceCents: 249900, description: 'No Limit Fabrication reverse leveling kit for Ford Super Duty, restoring factory rake after a front leveling kit.' },
+  { id: 'nolimit-traction-bars', sku: 'NLTRACBARS', name: 'No Limit Fabrication Premium Traction Bars', platformSlug: 'powerstroke', priceCents: 109900, description: 'No Limit Fabrication premium traction bars for Ford Super Duty, reducing axle wrap under hard acceleration.' },
+  { id: 'nolimit-bodymounts-0816', sku: 'NLBODYMT0816', name: 'No Limit Fabrication Body Mounts — 2008-2016 Ford Super Duty', platformSlug: 'powerstroke', priceCents: 39900, description: 'No Limit Fabrication replacement body mount set for 2008-2016 Ford Super Duty.' },
+  { id: 'nolimit-bodymounts-0307', sku: 'NLBODYMT0307', name: 'No Limit Fabrication Body Mounts — 2003-2007 Ford Super Duty', platformSlug: 'powerstroke', priceCents: 44900, description: 'No Limit Fabrication replacement body mount set for 2003-2007 Ford Super Duty.' },
+  { id: 'nolimit-radsupport-17', sku: 'NLRADSUPPORT17', name: 'No Limit Fabrication Silicone Radiator Support Mounts — 2017+', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication silicone radiator support mounts for 2017+ Ford Super Duty.' },
+  { id: 'nolimit-bodymounts-9903', sku: 'NLBODYMT9903', name: 'No Limit Fabrication Body Mounts — 1999-2003 Ford Super Duty', platformSlug: 'powerstroke', priceCents: 44900, description: 'No Limit Fabrication replacement body mount set for 1999-2003 Ford Super Duty.' },
+  { id: 'nolimit-bumpstop', sku: 'NLBUMPSTOP', name: 'No Limit Fabrication Front Bump Stop', platformSlug: 'powerstroke', priceCents: 14900, description: 'No Limit Fabrication front bump stop for Ford Super Duty suspension systems.' },
+];
+
+export function seedNoLimitProducts() {
+  // Guard every category this batch touches, not just the two brand-new
+  // ones ('cooling', 'engine') — 'intake' and 'turbochargers' and
+  // 'suspension' are normally seeded by seed.js before db.js's seed
+  // functions run (see server.js's start command), but nothing here
+  // should assume that ordering. INSERT OR IGNORE is a no-op wherever
+  // seed.js's own (more complete) row already exists.
+  const ensureCategory = db.prepare(`INSERT OR IGNORE INTO categories (slug, name, blurb, icon) VALUES (@slug, @name, @blurb, @icon)`);
+  ensureCategory.run({ slug: 'cooling', name: 'Intercoolers & Piping', blurb: 'Intercoolers, hot/cold side piping, and coolant hardware', icon: 'intercooler' });
+  ensureCategory.run({ slug: 'engine', name: 'Engine Hardware', blurb: 'Coolant tanks, transmission pans, and engine bay accessories', icon: 'engine' });
+  ensureCategory.run({ slug: 'intake', name: 'Intake Systems', blurb: 'Cold air intakes & filters', icon: 'intake' });
+  ensureCategory.run({ slug: 'turbochargers', name: 'Turbochargers', blurb: 'Drop-in & compound turbo kits', icon: 'turbo' });
+  ensureCategory.run({ slug: 'suspension', name: 'Suspension & Lift', blurb: 'Lift kits, leveling kits & shocks', icon: 'lift' });
+
+  const batches = [
+    { products: NO_LIMIT_TURBO_PRODUCTS, categorySlug: 'turbochargers' },
+    { products: NO_LIMIT_INTAKE_PRODUCTS, categorySlug: 'intake' },
+    { products: NO_LIMIT_COOLING_PRODUCTS, categorySlug: 'cooling' },
+    { products: NO_LIMIT_ENGINE_PRODUCTS, categorySlug: 'engine' },
+    { products: NO_LIMIT_SUSPENSION_PRODUCTS, categorySlug: 'suspension' },
+  ];
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO products
+      (id, sku, name, brand, category_slug, platform_slug, price_cents, description, weight_lbs, supplier, active, stock_qty)
+    VALUES
+      (@id, @sku, @name, 'No Limit Fabrication', @categorySlug, @platformSlug, @priceCents, @description, NULL, 'No Limit Fabrication', 1, 3)
+  `);
+  const updateName = db.prepare(`UPDATE products SET name = @name WHERE id = @id AND brand = 'No Limit Fabrication'`);
+
+  let inserted = 0;
+  let total = 0;
+  for (const { products, categorySlug } of batches) {
+    total += products.length;
+    for (const p of products) {
+      try {
+        const info = insert.run({ ...p, categorySlug });
+        if (info.changes > 0) inserted++;
+      } catch (err) {
+        console.error('[seedNoLimitProducts] insert failed for', p.id, '-', err.message);
+      }
+      try {
+        updateName.run({ id: p.id, name: p.name });
+      } catch (err) {
+        console.error('[seedNoLimitProducts] update failed for', p.id, '-', err.message);
+      }
+    }
+  }
+
+  const nlCount = db.prepare(`SELECT COUNT(*) AS c FROM products WHERE brand = 'No Limit Fabrication'`).get().c;
+  console.log(`[seedNoLimitProducts] inserted ${inserted}/${total} new rows this run; ${nlCount} No Limit Fabrication rows total in DB now.`);
+}
+
 migrate();
 seedFassProducts();
 seedDccTurbos();
 seedP1rp();
 seedP1rpImages();
-
-if (process.argv.includes('--migrate')) {
-  console.log('Migration applied to', DB_PATH);
-}
+seedNoLimitProducts();
