@@ -1120,6 +1120,92 @@ export function seedNoLimitImages() {
   console.log(`[seedNoLimitImages] set image_url on ${updated}/${total} No Limit Fabrication rows this run.`);
 }
 
+// South Bend Clutch — product images.
+// Sourced directly from southbendclutch.com's own Shopify JSON product feed
+// (not Dirty Diesel, the reseller we used for pricing) — matched by finding
+// the real part number as the image filename on their own product pages,
+// which is the strongest possible signal since South Bend names many of
+// their own image files after the exact part number. Only 48 of 80 have a
+// confident match: South Bend's site is newer and many products (all the
+// "1947-*" Cummins family, several "SFDD3250-6..." Powerstroke twin-discs,
+// two slave master cylinders) simply don't have a photo uploaded yet on
+// their end. Duramax got 0/9 — southbendclutch.com currently has ZERO
+// Duramax products live in its catalog at all (not just missing photos),
+// confirmed by paginating their full site-wide product feed. Two matches
+// (SFDD3250-5 and SFDD3250-5-ORG) are lower-confidence: the image filename
+// uses an "FC3250-5" prefix instead of "SFDD3250-5", but the numeric core,
+// platform, and HP tier all line up and no better candidate exists.
+// Same safety pattern as the other seedXImages() functions: only fills in
+// image_url where currently empty.
+const SOUTH_BEND_IMAGE_MAP = {
+  'southbend-sdd3250-gk': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-GK.jpg?v=1765453272',
+  'southbend-sdd3250-gk-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-GK-ORG.jpg?v=1765453270',
+  'southbend-sdd3250-g': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-G.jpg?v=1765453267',
+  'southbend-sdd3250-g-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-G-ORG.jpg?v=1765453265',
+  'southbend-sdd3250-6': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-6.jpg?v=1765453263',
+  'southbend-sdd3250-6-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-6-ORG.jpg?v=1765453260',
+  'southbend-sdd3250-5-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-5-ORG.jpg?v=1765453244',
+  'southbend-sdd3250-5k-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-5K-ORG.jpg?v=1765453254',
+  'southbend-sdd3250-5g': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/SDD3250-5G.jpg?v=1765453252',
+  'southbend-13125-ok': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OK.jpg?v=1765386938',
+  'southbend-13125-ok-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OK-HD.jpg?v=1765386935',
+  'southbend-13125-ofek': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OFEK.jpg?v=1765386933',
+  'southbend-13125-fek': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-FEK.jpg?v=1765386930',
+  'southbend-13125-or': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OR_1.jpg?v=1765387760',
+  'southbend-13125-or-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OR-HD_1.jpg?v=1765387758',
+  'southbend-13125-fer': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-FER_1.jpg?v=1765387743',
+  'southbend-13125-ofer': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/13125-OFER_1.jpg?v=1765387748',
+  'southbend-g56-ok-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/G56-OK-HD.jpg?v=1765387316',
+  'southbend-g56-ofek': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/G56-OFEK.jpg?v=1765387313',
+  'southbend-g56-ofer': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/G56-OFER_1.jpg?v=1765388070',
+  'southbend-g56-or-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/G56-OR-HD_1.jpg?v=1765388077',
+  'southbend-1670104-6': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1670104-6_4.jpg?v=1765390204',
+  'southbend-hyd-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/HYD-HD.jpg?v=1765387321',
+  'southbend-1944-6or-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OR-HD_7.jpg?v=1765392562',
+  'southbend-1944-6ofek': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OFEK.jpg?v=1765386976',
+  'southbend-1950-60dfk': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1950-60DFK.jpg?v=1765387004',
+  'southbend-1944-6or': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OR_1.jpg?v=1765387818',
+  'southbend-1944-5ofek': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OFEK.jpg?v=1765386960',
+  'southbend-1939-df': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1939-DF_7.jpg?v=1765392487',
+  'southbend-1944-5k': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5K.jpg?v=1765386957',
+  'southbend-sfdd3250-5-org': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/FC3250-5-ORG.jpg?v=1765387128',
+  'southbend-1939ohd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1939-OHD_7.jpg?v=1765392489',
+  'southbend-sfdd3250-5': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/FC3250-5.jpg?v=1765387130',
+  'southbend-1950-64ok-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1950-64OK-HD.jpg?v=1765387017',
+  'southbend-1950-64cbk': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1950-64CBK.jpg?v=1765387012',
+  'southbend-1950-60cbk': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1950-60CBK.jpg?v=1765387002',
+  'southbend-1944-5or-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OR-HD_7.jpg?v=1765392534',
+  'southbend-1939-cb': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1939-CB_7.jpg?v=1765392485',
+  'southbend-fc-6okhd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/FC-6OKHD.jpg?v=1765387122',
+  'southbend-1944-6r': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6R_1.jpg?v=1765387823',
+  'southbend-1944-6ofer': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OFER_1.jpg?v=1765387811',
+  'southbend-1944-5or': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OR_1.jpg?v=1765387795',
+  'southbend-1944-5ofer': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OFER_1.jpg?v=1765387788',
+  'southbend-1944-5ok': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OK.jpg?v=1765386966',
+  'southbend-1944-6ok-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OK-HD.jpg?v=1765386979',
+  'southbend-1944-6ok': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6OK.jpg?v=1765386982',
+  'southbend-1944-6k': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-6K.jpg?v=1765386973',
+  'southbend-1944-5ok-hd': 'https://cdn.shopify.com/s/files/1/0887/5904/2341/files/1944-5OK-HD.jpg?v=1765386963',
+};
+
+export function seedSouthBendImages() {
+  const update = db.prepare(`
+    UPDATE products SET image_url = @image_url
+    WHERE id = @id AND brand = 'South Bend Clutch' AND (image_url IS NULL OR image_url = '')
+  `);
+  let updated = 0;
+  for (const [id, image_url] of Object.entries(SOUTH_BEND_IMAGE_MAP)) {
+    try {
+      const info = update.run({ id, image_url });
+      if (info.changes > 0) updated++;
+    } catch (err) {
+      console.error('[seedSouthBendImages] update failed for', id, '-', err.message);
+    }
+  }
+  const total = Object.keys(SOUTH_BEND_IMAGE_MAP).length;
+  console.log(`[seedSouthBendImages] set image_url on ${updated}/${total} South Bend Clutch rows this run (${SOUTH_BEND_PRODUCTS.length - total} remaining South Bend products have no confirmed photo yet).`);
+}
+
 migrate();
 seedFassProducts();
 seedDccTurbos();
@@ -1128,6 +1214,7 @@ seedP1rpImages();
 seedNoLimitProducts();
 seedNoLimitImages();
 seedSouthBendProducts();
+seedSouthBendImages();
 
 if (process.argv.includes('--migrate')) {
   console.log('Migration applied to', DB_PATH);
